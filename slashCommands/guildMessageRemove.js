@@ -1,6 +1,4 @@
-const { MessageEmbed } = require("discord.js")
-const { client, config, localTime, Models } = require("../server")
-const axios = require("axios")
+const { Models } = require("../server")
 
 module.exports = {
     type: 'CHAT_INPUT',
@@ -19,16 +17,14 @@ module.exports = {
         if (!interaction) return;
         let deletindText = interaction.options.getString("silinecek_yazı")
         await Models.guilds.updateOne(
-          { guildId: interaction?.guildId }, 
-          { $pull: { messages: { receivedMessage: deletindText } } }, 
-          { upsert: true }
+            { guildId: interaction?.guildId },
+            { $pull: { messages: { receivedMessage: deletindText } } },
+            { upsert: true }
         )
-        .then(() => {
-            return interaction.reply({ content: `Tamamdır artık \`${deletindText}\` yazısına cevap verilmeyecektir.` })
-        })
-        .catch(err => {
-            return interaction.reply({ content: `Hata ile karşılaşıldı. \nBöyle bir yazı bulunamış veya silme işleminde hata olmuş olabilir.` })
-        })
-      
+        .then(() => interaction.reply({ content: `Tamamdır artık \`${deletindText}\` yazısına cevap verilmeyecektir.` }))
+        .catch(err => interaction.reply({ 
+            content: `Hata ile karşılaşıldı. \nBöyle bir yazı bulunamamış veya silme işleminde hata olmuş olabilir.` 
+        }))
+        return;
     }
 }

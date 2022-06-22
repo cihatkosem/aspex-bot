@@ -1,6 +1,5 @@
+const { localTime, Models, config } = require("../server")
 const { MessageEmbed } = require("discord.js")
-const { client, config, localTime, Models } = require("../server")
-const axios = require("axios")
 
 module.exports = {
     type: 'CHAT_INPUT',
@@ -14,7 +13,7 @@ module.exports = {
             type: "STRING",
             required: true,
             choices: [
-              { name: "prefix olmadan", value: "message-noprefix" }
+                { name: "prefix olmadan", value: "message-noprefix" }
             ]
         },
         {
@@ -29,8 +28,8 @@ module.exports = {
             type: "STRING",
             required: true,
             choices: [
-              { name: "evet", value: "message-blocked" },
-              { name: "hayır", value: "message-noblocked" }
+                { name: "evet", value: "message-blocked" },
+                { name: "hayır", value: "message-noblocked" }
             ]
         },
         {
@@ -46,20 +45,20 @@ module.exports = {
         let inComingMessage = interaction.options.getString("gelen_mesaj")
         let isBlock = interaction.options.getString("gelen_mesaj_engellensin_mi")
         let outGoingMessage = interaction.options.getString("gönderilecek_mesaj")
-        
+
         let prefix = howToUse == "message-noprefix" ? false : howToUse == "message-withprefix" ? true : null
         let block = isBlock == "message-blocked" ? true : isBlock == "message-noblocked" ? false : null
         let receivedMessage = inComingMessage.toLowerCase()
         let sendMessage = outGoingMessage
-        
+
         if (receivedMessage.toLowerCase() == sendMessage.toLowerCase())
             return interaction.reply({ content: `Yazılan metin ile gönderilecek olan metin aynı olamaz!` })
-      
+
         let findServer = await Models.guilds.findOne({ guildId: interaction?.guildId })
         let findText = findServer.messages.filter(f => f.receivedMessage == receivedMessage)[0]
-        
+
         if (findText) return interaction.reply({ content: `Bu yazı daha önceden kaydedilmiş, değiştirmek için önce silmelisin!` })
-      
+
         return await Models.guilds.updateOne({ guildId: interaction?.guildId }, {
             $push: {
                 messages: {
@@ -69,18 +68,17 @@ module.exports = {
                 }
             }
         }, { upsert: true })
-          .then(() => {
-              let embed = new MessageEmbed()
-                  .setColor(config.color)
-                  .setDescription(
-                      `> ** Sunucuya Özel Mesaja Cevap Başarıyla Eklendi.**\n` +
-                      `> Bu mesajı oluşturan: <@${interaction.member.id}> _[${interaction.member.id}](http://drizzlydeveloper.xyz/api/discord/users/${interaction.member.id})_ \n` +
-                      `> Cevap verilecek olan mesaj: \`${receivedMessage}\` \n` +
-                      `> Cevap mesajı: \`${sendMessage}\``
-                  )
-                  .setTimestamp().setFooter({ text: `${client.user.username} • Drizzly Developer`, iconURL: client.user.displayAvatarURL() })
+            .then(() => {
+                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                    .setDescription(
+                        `> ** Sunucuya Özel Mesaja Cevap Başarıyla Eklendi.**\n` +
+                        `> Bu mesajı oluşturan: <@${interaction.member.id}> _[${interaction.member.id}](http://drizzlydeveloper.xyz/api/discord/users/${interaction.member.id})_ \n` +
+                        `> Cevap verilecek olan mesaj: \`${receivedMessage}\` \n` +
+                        `> Cevap mesajı: \`${sendMessage}\``
+                    )
 
-              interaction.reply({ embeds: [embed] })
-          }).catch((err) => interaction.reply({ content: `İsteğinizi gerçekleştirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.` }))
+                interaction.reply({ embeds: [embed] })
+            }).catch((err) => interaction.reply({ content: `İsteğinizi gerçekleştirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.` }))
+        return;
     }
 }

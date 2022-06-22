@@ -1,5 +1,4 @@
-const { MessageEmbed, MessageButton, MessageActionRow, Modal, TextInputComponent } = require("discord.js")
-const { client, config, localTime } = require("../server")
+const { MessageActionRow, Modal, TextInputComponent } = require("discord.js")
 
 module.exports = {
     type: 'CHAT_INPUT',
@@ -19,5 +18,6 @@ module.exports = {
         modal.addComponents(secondActionRow)
 
         await interaction.showModal(modal)
+        return;
     }
 }

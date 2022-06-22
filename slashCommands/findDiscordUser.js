@@ -1,6 +1,6 @@
-const { MessageEmbed } = require("discord.js")
-const { client, config, localTime } = require("../server")
+const { config } = require("../server")
 const axios = require("axios")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     type: 'CHAT_INPUT',
@@ -22,8 +22,7 @@ module.exports = {
         let user = api?.data?.data ? api?.data?.data : null
         if (!user) return interaction.reply({ content: "Profil bulunamadı! _Api kullanıldığı için kullanım limiti dolmuş olabilir_", ephemeral: true })
 
-        let embed = new MessageEmbed()
-            .setColor(user.bannerColor ? user.bannerColor : config.color)
+        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
             .setAuthor({ name: user.username, iconURL: user.avatarURL ? user.avatarURL + "?size=4096" : "" })
             .setDescription(
                 '**Oluşturulma Tarihi: **' + user.createdAt + "\n" +
@@ -34,8 +33,8 @@ module.exports = {
             )
             .setThumbnail(user.avatarURL ? user.avatarURL + "?size=4096" : "")
             .setImage(user.bannerURL ? user.bannerURL + "?size=4096" : "")
-            .setTimestamp().setFooter({ text: `${client.user.username} • Drizzly Developer`, iconURL: client.user.displayAvatarURL() })
 
         interaction.reply({ embeds: [embed], ephemeral: true })
+        return;
     }
 }

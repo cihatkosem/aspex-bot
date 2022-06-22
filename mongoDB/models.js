@@ -4,15 +4,9 @@ let guilds;
 module.exports.guilds = guilds = mongoose.model("guilds", mongoose.Schema({
     guildId: { type: String, required: true },
     settings: {
-        adBlocker: {
-            channels: Array
-        },
-        swearBlocker: {
-            channels: Array
-        },
-        uppercaseBlocker: {
-            channels: Array
-        },
+        adBlocker: { channels: Array },
+        swearBlocker: { channels: Array },
+        uppercaseBlocker: { channels: Array },
         loginInfo: {
             status: String,
             channelId: String,
@@ -33,6 +27,7 @@ module.exports.guilds = guilds = mongoose.model("guilds", mongoose.Schema({
         },
     },
     messages: { type: Array, required: true, default: [] },
+    logs: { type: Array, required: true, default: [] },
     transactions: { type: Array, required: true, default: [] },
 }))
 
@@ -50,6 +45,7 @@ module.exports.functions = {
                     spotifyPresence: { status: "disable", channelId: "", channelWebhookID: "", channelWebhookTOKEN: "" },
                 },
                 transactions: [],
+                logs: [],
                 messages: []
             }, { upsert: true }
             ).catch((err) => console.log(err))

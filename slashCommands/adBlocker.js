@@ -1,6 +1,4 @@
-const { MessageEmbed, Permissions } = require("discord.js")
-const { client, config, localTime, Models, randomId } = require("../server")
-const axios = require("axios")
+const { localTime, Models, randomId } = require("../server")
 
 module.exports = {
     type: 'CHAT_INPUT',
@@ -59,9 +57,9 @@ module.exports = {
             channels.push(channel.id)
             modelfetch.save()
         }
-      
+
         let blockedChannels = channelBlock[0] ? orderchannelsBlock.map(m => `<#${m}>`) : _channels + ` <#${channel.id}>`
-        
+
         try {
             await interaction.reply({
                 content: `İşlem tamamdır, artık <#${channel.id}> kanalında reklamlar ${isitblocked}. \n> Engellenen kanallar: ${blockedChannels}`
@@ -85,5 +83,6 @@ module.exports = {
                 }
             }
         }, { upsert: true }).catch(err => console.log(err))
+        return;
     }
 }

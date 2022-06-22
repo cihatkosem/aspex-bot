@@ -2,3 +2,4 @@
 package-lock.json
 tailwind.config.js
 tailwind.css
+.env

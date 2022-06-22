@@ -1,6 +1,4 @@
-const { MessageEmbed, Permissions } = require("discord.js")
-const { client, config, localTime, Models, randomId } = require("../server")
-const axios = require("axios")
+const { localTime, Models, randomId } = require("../server")
 
 module.exports = {
     type: 'CHAT_INPUT',
@@ -85,5 +83,6 @@ module.exports = {
                 }
             }
         }, { upsert: true }).catch(err => console.log(err))
+        return;
     }
 }

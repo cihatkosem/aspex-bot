@@ -1,5 +1,4 @@
-const { client, localTime, config, Models } = require("../server")
-const axios = require("axios")
+const { client, config, Models } = require("../server")
 const { WebhookClient, MessageEmbed } = require("discord.js")
 
 client.on('presenceUpdate', async (oldPresence, newPresence) => {
@@ -9,10 +8,31 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
     if (oldStatus?.web && newStatus?.web && (!oldStatus?.mobile && newStatus?.mobile || !oldStatus?.desktop && newStatus?.desktop)) return;
     if (oldStatus?.desktop && newStatus?.desktop && (!oldStatus?.web && newStatus?.web || !oldStatus?.mobile && newStatus?.mobile)) return;
 
-    let Presence = (activities) => newPresence.activities.filter(f => f.name == activities)[0]
-    let spotify = Presence("Spotify")
+    let PresenceOld = async (activities) => oldPresence.activities.filter(f => f.name == activities)[0]
+    let PresenceNew = async (activities) => newPresence.activities.filter(f => f.name == activities)[0]
+    let newSpotify = await PresenceNew("Spotify")
+    let oldCustomStatus = await PresenceOld("Custom Status")
+    let newCustomStatus = await PresenceNew("Custom Status")
 
-    if (spotify) {
+    let webhookURL = `https://discord.com/api/webhooks/`
+    let Log = (_name) => modelfetch?.logs?.filter(f => f.name == _name)[0]
+    let webhook = (_name) => Log(_name) ? webhookURL + Log(_name)?.channelWebhookID + "/" + Log(_name)?.channelWebhookTOKEN : null
+
+    let fetchWebhook = webhook("Kullanıcının Özel Durumu Değiştiğinde")
+    if (fetchWebhook && newCustomStatus && oldCustomStatus?.state !== newCustomStatus?.state) {
+        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        .setDescription(
+            `> **Kullanıcının Özel Durumu Değişmesi - Bilgilendirme Sistemi** \n` +
+            `> Durumunu değiştiren kullanıcı: <@${newPresence.userId}>\n` +
+            `> Kişi hakkında detaylı bilgi için [tıkla →](http://drizzlydeveloper.xyz/api/discord/users/${newPresence.userId}) \n\n` +
+            `\`\`\`Eski Durum Mesajı: \n${oldCustomStatus?.state} \n\nYeni Durum Mesajı: \n${newCustomStatus?.state}\`\`\`\n`
+        )
+        let guildWebhook = new WebhookClient({ url: fetchWebhook })
+        guildWebhook.send({ username: client.user.username, avatarURL: client.user.displayAvatarURL(), embeds: [embed] })
+            .catch((err) => { })
+    }
+    
+    if (newSpotify) {
         if (!modelfetch || !modelfetch.settings.spotifyPresence.channelId) return;
         let channel = client.guilds.cache.get(modelfetch.guildId).channels.cache.get(modelfetch.settings.spotifyPresence.channelId)
         let webhooks = async (channel) => channel.fetchWebhooks()
@@ -31,11 +51,9 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
                     MessageChannel.send(`> Sayın yönetici <@${client.guilds.cache.get(modelfetch.guildId).ownerId}>, Spotify için webhook'u oluşturdum.`)
                 })
                 .catch((err) => {
-                    try {
-                        MessageChannel.send(
-                            `> Sayın yönetici <@${client.guilds.cache.get(modelfetch.guildId).ownerId}>, yetkim olmadığı için Spotify webhook'u oluşturamadım.`
-                        )
-                    } catch (err) { }
+                    MessageChannel.send(
+                        `> Sayın yönetici <@${client.guilds.cache.get(modelfetch.guildId).ownerId}>, yetkim olmadığı için Spotify webhook'u oluşturamadım.`
+                    ).catch((err) => {})
                 })
 
         let spotifyPresence = modelfetch.settings.spotifyPresence
@@ -49,12 +67,11 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
 
         let Info = new WebhookClient({ url: spotifyWebhookURL })
         let spotifyImg = "https://play-lh.googleusercontent.com/UrY7BAZ-XfXGpfkeWg0zCCeo-7ras4DCoRalC_WXXWTK9q5b0Iw7B0YQMsVxZaNB7DM"
-        let embed = new MessageEmbed()
-            .setColor(config.color)
+        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
             .setAuthor({
-                name: spotify.details + " / " + spotify.state,
-                iconURL: `https://i.scdn.co/image/${spotify.assets.largeImage.slice(8)}`,
-                url: `https://open.spotify.com/track/${spotify.syncId}`
+                name: newSpotify.details + " / " + newSpotify.state,
+                iconURL: `https://i.scdn.co/image/${newSpotify.assets.largeImage.slice(8)}`,
+                url: `https://open.newSpotify.com/track/${newSpotify.syncId}`
             })
             .setDescription(`**Müziği dinleyen:** <@${newPresence.userId}>`)
 

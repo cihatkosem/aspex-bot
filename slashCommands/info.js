@@ -1,5 +1,5 @@
+const { localTime, config } = require("../server")
 const { MessageEmbed } = require("discord.js")
-const { client, config, localTime } = require("../server")
 
 module.exports = {
     type: 'CHAT_INPUT',
@@ -7,10 +7,8 @@ module.exports = {
     name: "bilgi",
     description: "Discord botuna ait bilgileri gösterir.",
     run: async (client, interaction, args) => {
-        let embed = new MessageEmbed().setColor(config.color)
+        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
             .setThumbnail(client.user.displayAvatarURL())
-            .setTimestamp()
-            .setFooter({ text: `${client.user.username} • Drizzly Developer`, iconURL: client.user.displayAvatarURL() })
             .addFields(
                 {
                     name: `Ben ${client.user.username},`,
@@ -39,5 +37,6 @@ module.exports = {
                 }
             )
         await interaction.reply({ embeds: [embed] })
+        return;
     }
 }

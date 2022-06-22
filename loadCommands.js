@@ -27,7 +27,7 @@ module.exports = async function loadCommands () {
         client.selectMenus.set(command.name, command)
         arrayOfSelectMenus.push(command)
     }
-
+    
     await client.application.commands.set(arrayOfSlashCommands)
     //await client.application.commands.set([]) //-> Gerekmedikçe kullanma!
 }

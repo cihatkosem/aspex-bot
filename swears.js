@@ -14,6 +14,7 @@ module.exports = [
     "ejaculated", "ejakülatlar", "ejaculating", "boşalma", "ibne", "ibneler", "kıç",
     "felching", "flanş", "pezevenk", "fuckings", "hore", "orospu cocu",
     "labia", "şehvet", "lusting", "mazoşist", "orgasim", "orgazm", "penis",
+    "sikiyim", "sikim", "ejdadını", "bacını", "orospi", "pij", "amık", "mk",
     "pissoff", "bok", "kaka", "porno", "pornografi", "pube", "amcıklar", "kolza", "rektum",
     "rimming", "sadist", "skrotum", "meni", "seks", "shagging", "s!kerim",
     "shitted", "shitting", "smegma", "orospu çocuğu", "spac", "testis",

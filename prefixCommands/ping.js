@@ -1,6 +1,3 @@
-const { client, config, swearBlocker, Models } = require("../server")
-const { MessageEmbed, Permissions, Modal } = require("discord.js")
-
 module.exports = {
     names: ["ping", "gecikme"],
     permission: "",

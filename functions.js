@@ -10,7 +10,7 @@ require("dayjs").extend(require('dayjs/plugin/timezone'))
 require("dayjs").extend(require('dayjs/plugin/utc'))
 require("dayjs").locale('tr')
 
-module.exports.localTime = async function time (format, date) {
+module.exports.localTime = async function time(format, date) {
     let data = date ? DayJs(date).tz('Asia/Istanbul') : DayJs().tz('Asia/Istanbul')
     return new Promise((resolve) => resolve(data.format(format)))
 }
@@ -18,8 +18,8 @@ module.exports.localTime = async function time (format, date) {
 module.exports.swearBlocker = async function (content) {
     let ThereIs = swears.map(m => content.split(' ').includes(m))
     return new Promise((resolve) => {
-      if (ThereIs.filter(f => f == true)[0]) resolve(true)
-      else return resolve(null)
+        if (ThereIs.filter(f => f == true)[0]) resolve(true)
+        else return resolve(null)
     })
 }
 
@@ -61,7 +61,7 @@ module.exports.instagramUser = async function (username) {
             return new Promise((resolve) => resolve(user))
         })
     } catch (err) {
-      return new Promise((resolve) => resolve(null))
+        return new Promise((resolve) => resolve(null))
     }
 }
 

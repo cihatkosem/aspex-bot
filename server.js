@@ -11,17 +11,14 @@ const intents = [
 const client = new Client({ intents, allowedMentions })
 
 const server = require("express")()
-const { prefix, token, owner, mongoURL, swears, instagramAccout } = require("./config.js")
+const config = { prefix, token, owner, mongoURL, swears, instagramAccout } = require("./config.js")
 const { localTime, swearBlocker, randomId, adBlocker, uppercaseBlocker, instagramUser, translate } = require("./functions.js")
 const fs = require("fs")
-const DayJs = require("dayjs")
-const randomstring = require("randomstring")
 const mongoose = require('mongoose')
-const GoogleTranslate = require('translate-google')
-const instagram = require("user-instagram")
 const mongoDBConnect = require('./mongoDB/connect.js')
 const Models = require('./mongoDB/models.js')
 
+require('dotenv').config()
 require('dayjs/locale/tr')
 require("dayjs").extend(require('dayjs/plugin/timezone'))
 require("dayjs").extend(require('dayjs/plugin/utc'))
@@ -31,10 +28,7 @@ client.slashCommands = new Collection()
 client.prefixCommands = new Collection()
 client.selectMenus = new Collection()
 
-fs.readdir("./events/", (err, files) => {
-    if (err) return console.log(err)
-    files.forEach(file => require(`./events/${file}`))
-})
+fs.readdir("./events/", (err, files) => err ? console.log(err) : files.forEach(file => require(`./events/${file}`)))
 
 var regToken = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g;
 
@@ -47,7 +41,7 @@ server.use(function (req, res) {
     return res.json({ status: "online" })
 })
 
-mongoDBConnect(mongoose, mongoURL)
+mongoDBConnect(mongoose, process.env.MONGOURL || mongoURL)
 
 let openSystemTry = 0;
 openSystem()
@@ -55,13 +49,13 @@ async function openSystem() {
     setTimeout(async () => {
         if (openSystemTry == 50) return console.log("❎ Discord: Not Connection, because MongoDB not connection!")
         if (!mongoose?.connections[0]?.name) { openSystemTry++; return openSystem() }
-        client.login(token)
+        client.login(process.env.TOKEN || token)
             .then(() => console.log(`✅ Discord: @${client.user.username}`))
             .catch((err) => console.log("❎ Discord: Not Connection"))
     }, 500)
 }
 
-module.exports = { 
-  client, config: require("./config.js"), Models, localTime,
-  swearBlocker, randomId, adBlocker, instagramUser, translate, uppercaseBlocker
+module.exports = {
+    client, config: require("./config.js"), Models, localTime,
+    swearBlocker, randomId, adBlocker, instagramUser, translate, uppercaseBlocker
 }
