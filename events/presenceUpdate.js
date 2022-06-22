@@ -8,8 +8,8 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
     if (oldStatus?.web && newStatus?.web && (!oldStatus?.mobile && newStatus?.mobile || !oldStatus?.desktop && newStatus?.desktop)) return;
     if (oldStatus?.desktop && newStatus?.desktop && (!oldStatus?.web && newStatus?.web || !oldStatus?.mobile && newStatus?.mobile)) return;
 
-    let PresenceOld = async (activities) => oldPresence.activities.filter(f => f.name == activities)[0]
-    let PresenceNew = async (activities) => newPresence.activities.filter(f => f.name == activities)[0]
+    let PresenceOld = async (activities) => oldPresence?.activities?.filter(f => f.name == activities)[0]
+    let PresenceNew = async (activities) => newPresence?.activities?.filter(f => f.name == activities)[0]
     let newSpotify = await PresenceNew("Spotify")
     let oldSpotify = await PresenceOld("Spotify")
     let oldCustomStatus = await PresenceOld("Custom Status")
@@ -33,7 +33,7 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
             .catch((err) => { })
     }
     
-    if (newSpotify && newSpotify.syncId !== oldSpotify.syncId) {
+    if (newSpotify && newSpotify?.syncId !== oldSpotify?.syncId) {
         if (!modelfetch || !modelfetch.settings.spotifyPresence.channelId) return;
         let channel = client.guilds.cache.get(modelfetch.guildId).channels.cache.get(modelfetch.settings.spotifyPresence.channelId)
         let webhooks = async (channel) => channel.fetchWebhooks()
