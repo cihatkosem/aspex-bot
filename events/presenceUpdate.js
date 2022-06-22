@@ -11,6 +11,7 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
     let PresenceOld = async (activities) => oldPresence.activities.filter(f => f.name == activities)[0]
     let PresenceNew = async (activities) => newPresence.activities.filter(f => f.name == activities)[0]
     let newSpotify = await PresenceNew("Spotify")
+    let oldSpotify = await PresenceOld("Spotify")
     let oldCustomStatus = await PresenceOld("Custom Status")
     let newCustomStatus = await PresenceNew("Custom Status")
 
@@ -32,7 +33,7 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
             .catch((err) => { })
     }
     
-    if (newSpotify) {
+    if (newSpotify && newSpotify.syncId !== oldSpotify.syncId) {
         if (!modelfetch || !modelfetch.settings.spotifyPresence.channelId) return;
         let channel = client.guilds.cache.get(modelfetch.guildId).channels.cache.get(modelfetch.settings.spotifyPresence.channelId)
         let webhooks = async (channel) => channel.fetchWebhooks()
