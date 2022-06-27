@@ -2,6 +2,8 @@ const { client, config, Models, swearBlocker, adBlocker } = require("../server")
 const { Permissions, MessageEmbed, WebhookClient } = require("discord.js")
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {
+    if (newMessage.author.bot == true) return;
+    if (oldMessage.content == newMessage.content) return;
     let content = newMessage.content.toLowerCase()
     let args = content.split(" ").map(m => m)
     let modelfetch = await Models.guilds.findOne({ guildId: newMessage?.guild?.id })

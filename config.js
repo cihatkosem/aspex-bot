@@ -2,6 +2,8 @@ module.exports = {
     prefix: "+",
     owner: "648040310857007115",
     developers: ["648040310857007115", "500527985061789711"],
+    clientID: "",
+    clientSecret: "",
     token: "OTcyOTY0NTcyMzEzMDMwNjc2.G2bQpu.yj7Bax2V_mtupjflVyXtqLJHR4PzovlW-SWZ_A",
     color: "#9500ff",
     mongoURL: "mongodb+srv://Stcox:k1z1lelma7506@aspex.jxj1x.mongodb.net/aspex",
@@ -18,5 +20,16 @@ module.exports = {
       { text: "✅ username - guildsSize Sunucu (beta)", waitSecond: "10" },
       { text: "✅ /yardım & slash commands", waitSecond: "20" },
       { text: "✅ drizzlydeveloper.xyz", waitSecond: "5" }
-    ] 
+    ],
+    settings: [
+      { name: "Kötü Söz Engelleyici", tag: "swear-blocker" },
+      { name: "Reklam Engelleyici", tag: "ad-blocker" },
+      { name: "Büyük Harf Engelleyici", tag: "uppercase-blocker" },
+      { name: "Kullanıcı Giriş Bilgilendirme", tag: "joined-user-information" },
+      { name: "Kullanıcı Çıkış Bilgilendirme",  tag: "leaved-user-information" },
+      { name: "Spotify'da Dinlenen Müzik", tag: "spotify-playing-information" },
+      { name: "Sunucuya Özel Mesaj", tag: "private-message" },
+      { name: "Sunucu Günlükleri", tag: "server-logs" },
+      { name: "İşlemler", tag: "transactions" }
+  ]
 }
