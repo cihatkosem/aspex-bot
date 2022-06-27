@@ -1,0 +1,104 @@
+<html lang="tr" style="font-family: 'Montserrat', sans-serif;">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
+        <title><%= client.user.username %></title>
+        <% let clientAvatar = client.user.avatar ? `avatars/${client.user.id}/${client.user.avatar}.webp` : "embed/avatars/0.png" %>
+        <link rel="shortcut icon" href="https://cdn.discordapp.com/<%= clientAvatar %>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@2.17.0/dist/full.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&amp;display=swap">
+    </head>
+    <body class="select-none bg-black min-h-screen text-white p-2">
+        <nav class="navbar">
+            <div class="flex-1">
+                <div class="btn btn-ghost flex flex-wrap items-center">
+                    <img class="w-8 h-8 rounded-full mr-2" src="https://cdn.discordapp.com/<%= clientAvatar %>" alt="">
+                    <a onclick="location.href='/'" class="normal-case text-xl"><%= client.user.username %></a>
+                </div>
+            </div>
+            <div class="flex-none">
+                <% if (user) { %>
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0">
+                        <% let avatar = user.avatar ? `avatars/${user.id}/${user.avatar}.webp` : "embed/avatars/0.png" %>
+                        <div class="btn btn-ghost flex flex-wrap items-center">
+                            <a class="normal-case text-xl"><%= user.username %></a>
+                            <img class="w-8 h-8 rounded-full ml-2" src="https://cdn.discordapp.com/<%= avatar %>" alt="">
+                        </div>
+                    </label>
+                    <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-gray-900 rounded-box w-52">
+                        <li><a class="flex justify-center"><%= user.username %>#<%= user.discriminator %></a></li>     
+                        <li><a onclick="location.href='/profil'"><i class="fa-solid fa-user-large"></i> Profil </a></li>                          
+                        <li><a onclick="location.href='/cikisyap'"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+            <% } %>
+            <% if (!user) { %>
+                <div class="flex-none">
+                    <a onclick="location.href='/girisyap/discord'" class="btn btn-ghost normal-case text-xl">
+                        Giriş Yap <i class="fa-solid fa-right-to-bracket pl-2"></i>
+                    </a>
+                </div>
+            <% } %>
+        </nav>
+        <div class="p-6 bg-primary border-3 border-black rounded-3xl">
+            <div class="transition duration-800">
+                <div class="w-full justify-center items-center text-black dark:text-white">
+                    <div class="pb-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="flex flex-col font-medium max-w-5xl text-lg">
+                                <span class="text-gray-900 text-sm">
+                                    <i>'Stcox#1453 (discord)</i>
+                                </span>
+                                <span>Proje sahibidir.</span>
+                                <span>"Tüm bu süreçte böylesine güzel bir projeye öncülük ettiğim için gurur duyuyorum."</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2 pb-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="flex flex-col font-medium max-w-5xl text-lg">
+                                <span class="text-gray-900 text-sm">
+                                    <i>Cihat Kösem</i>
+                                </span>
+                                <span>Sistem yöneticisi, geliştiricisi ve sorumlusudur.</span>
+                                <span>"Drizzly Developer adına bir proje daha yaptım, gelişmeye devam ediyoruz."</span>
+                                <span class="text-gray-900 text-sm">
+                                    <i>tüm platformlarda CihatKsm</i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pb-4 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="flex flex-col font-medium max-w-5xl text-lg">
+                                <span class="text-gray-900 text-sm">
+                                    <i><%= client.user.username%></i>
+                                </span>
+                                <span>Yeteneklerini her geçen gün geliştirmeye çalıştırdığımız bir bottur.</span>
+                                <span>Yönetim, moderasyon ... alanlarında iyi olmak amacıyla geliştirilmiştir.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-end justify-end fixed bottom-0 right-0 mb-3 mr-3 z-10">
+            <div class="bg-primary border-2 border-black text-sm rounded-3xl p-0.5 px-5 transform hover:scale-110">
+                beta version v0.1.6
+            </div>
+        </div>
+        <footer class="footer footer-center mt-5 p-5 bg-primary text-primary-content rounded-3xl">
+            <div>
+                <p class="font-bold">
+                    Teknik destek/sorun/öneri vs. için help@drizzlydeveloper.xyz
+                </p>
+                <p>Copyright © 2022 - Tüm hakları Drizzly Developer kuruluşu ile saklıdır.</p>
+            </div> 
+        </footer>
+    </body>
+</html>
