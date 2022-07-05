@@ -54,7 +54,7 @@ client.login(process.env.TOKEN || token)
     .catch((err) => console.log("❎ Discord: Not Connection"))
 
 
-const hostURL = process.env.TOKEN ? `http://localhost:80` : `http://axpex.gq`
+const hostURL = process.env.TOKEN ? `http://localhost:80` : `https://aspexbot.glitch.me`
 
 let openSystemTry = 0;
 openSystem()
