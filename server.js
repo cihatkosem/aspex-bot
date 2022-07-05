@@ -84,7 +84,7 @@ app.get("/", async (req, res) => {
     client.guilds.cache.sort(function(a, b){ return b.members.cache.size - a.members.cache.size }).map(m =>
         guilds.push({ 
             id: m.id, name: m.name, members: m.members.cache.size,
-            icon: `https://cdn.discordapp.com/icons/${m.id}/${m.icon}.webp?size=160`
+            icon: `https://cdn.discordapp.com/icons/${m.id}/${m.icon}.${m.icon.startsWith("a_") ? "gif" : "png"}`
         })
     )
     res.render("index", { client, user: req.session.user, guilds })

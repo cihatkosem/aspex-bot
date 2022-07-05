@@ -52,7 +52,7 @@
                     <p class="text-medium mb-5 text-gray-700">
                         <div class="flex flex-wrap justify-center items-center p-2">
                             <img class="max-w-8 max-h-8 rounded-full" 
-                                src="<%= guild.iconURL({ extension: "gif"}) ? guild.iconURL({ extension: "gif"}) : guild.iconURL({ extension: "png"}) %>">
+                                src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.<%= guild.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
                             <p class="text-medium text-gray-700 ml-2"><%= guild.name %></p>
                         </div>
                         <br>
