@@ -17,8 +17,7 @@ module.exports = {
       pass: "31!62!"
     },
     activityes: [ 
-      { text: "✅ username - guildsSize Sunucu (beta)", waitSecond: "10" },
-      { text: "✅ /yardım & slash commands", waitSecond: "20" },
+      { text: "✅ website | /yardım", waitSecond: "20" },
       { text: "✅ drizzlydeveloper.xyz", waitSecond: "5" }
     ],
     settings: [

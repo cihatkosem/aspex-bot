@@ -7,6 +7,7 @@ client.on('ready', async () => {
     await setActivity(config.activityes[0])
     async function setActivity(activity) {
         let text = activity.text
+            .replace('website', process.env.TOKEN ? "drizzlydeveloper.xyz" : `www.aspex.gq`)
             .replace('guildsSize', `${client.guilds.cache.size}`)
             .replace('username', `${client.user.username}`)
         let status = process.env.TOKEN ? { type: "LISTENING" } : { type: "STREAMING", url: config.twitch }

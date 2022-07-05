@@ -52,7 +52,7 @@
                     <div onclick="location.href='/panel/<%= m.id %>'" class="cursor-pointer m-2">
                         <% if (m.icon) { %>
                             <img class="h-12 w-12 easy duration-500 <%= guild && m.id == guild.id ? "rounded-xl" : "rounded-3xl hover:rounded-xl" %>" 
-                                src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.webp" alt="">
+                                src="<%= m.iconURL({ extension: "gif"}) ? m.iconURL({ extension: "gif"}) : m.iconURL({ extension: "png"}) %>" alt="">
                         <% } %>
                         <% if (!m.icon) { %>
                             <img class="h-12 w-12 easy duration-500 <%= guild && m.id == guild.id ? "rounded-xl" : "rounded-3xl hover:rounded-xl" %>" 

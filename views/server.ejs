@@ -48,36 +48,20 @@
         <div class="p-6 my-2 bg-primary border-3 border-black rounded-3xl">
             <div class="flex items-center justify-center px-4">
                 <div class="max-w-xl overflow-hidden rounded-xl bg-white shadow-md duration-200 hover:scale-110 hover:rounded-3xl hover:shadow-xl">
-                  <div class="p-5">
+                  <div class="p-2">
                     <p class="text-medium mb-5 text-gray-700">
-                        Hoşgeldin, burası <%= client.user.username %> botunun yönetilebildiği bir web sitedir.
+                        <div class="flex flex-wrap justify-center items-center p-2">
+                            <img class="max-w-8 max-h-8 rounded-full" 
+                                src="<%= guild.iconURL({ extension: "gif"}) ? guild.iconURL({ extension: "gif"}) : guild.iconURL({ extension: "png"}) %>">
+                            <p class="text-medium text-gray-700 ml-2"><%= guild.name %></p>
+                        </div>
                         <br>
-                        Tam olarak tamamlanmadığını hataların / sorunların olabileceğini unutmayınız :)
                     </p>
-                    <button onclick="location.href='/panel'"  class="m-1 w-full rounded-md bg-indigo-600  py-2 text-indigo-100 hover:bg-indigo-500 hover:shadow-md duration-75">
-                        Yönetim Paneline gitmek için tıklayınız. <i class="fa-solid fa-hand-pointer"></i>
-                    </button>
-                    <button onclick="location.href='/hakkinda'"  class="m-1 w-full rounded-md bg-red-600  py-2 text-indigo-100 hover:bg-red-500 hover:shadow-md duration-75">
-                        Hakkında <i class="fa-solid fa-align-left"></i>
-                    </button>
+                    <a class="m-2 p-2 w-full text-indigo-800">
+                        Bu sayfa geliştirilme aşamasındadır...
+                    </a>
                   </div>
                 </div>
-            </div>
-        </div>
-        <div class="p-6 my-2 bg-primary border-3 border-black rounded-3xl">
-            <p class="text-xl font-semibold p-1">
-                En populer sunucular:
-            </p>
-            <div class="flex flex-wrap items-center justify-left p-1">
-                <% guilds.slice(0,100).map(m => { %>
-                <div onclick="location.href='/sunucular/<%= m.id %>'"
-                    class="m-1 bg-white cursor-pointer max-w-xl rounded-xl hover:rounded-2xl shadow-md duration-200">
-                  <div class="flex flex-wrap justify-between items-center p-2">
-                    <img class="max-w-8 max-h-8 rounded-full" src="<%= m.icon %>" alt="">
-                    <p class="text-medium text-gray-700 ml-2"><%= m.name %></p>
-                  </div>
-                </div>
-                <% }) %>
             </div>
         </div>
         <div class="flex items-end justify-end fixed bottom-0 right-0 mb-3 mr-3 z-10">

@@ -80,9 +80,14 @@ app.use(express.static(path.join(__dirname, './views')))
 app.set('views', require('path').join(__dirname, './views/'))
 
 app.get("/", async (req, res) => {
-    return res.render("index", {
-        client, user: req.session.user
-    })
+    let guilds = []
+    client.guilds.cache.sort(function(a, b){ return b.members.cache.size - a.members.cache.size }).map(m =>
+        guilds.push({ 
+            id: m.id, name: m.name, members: m.members.cache.size,
+            icon: `https://cdn.discordapp.com/icons/${m.id}/${m.icon}.webp?size=160`
+        })
+    )
+    res.render("index", { client, user: req.session.user, guilds })
 })
 
 app.get("/hakkinda", async (req, res) => {
@@ -122,6 +127,15 @@ app.get("/profil", async (req, res) => {
     let guilds = jointGuilds.filter(f => (parseInt(f.permissions) & 0x8 === 0x8))
     return res.render("profile", {
         client, user: req.session.user, guilds
+    })
+})
+
+app.get(["/sunucular", "/sunucular/", "/sunucular/:id"], async (req, res) => {
+    if (!req.params.id) return res.redirect("/")
+    let guild = client.guilds.cache.get(req.params.id)
+    if (!guild) return res.redirect("/")
+    return res.render("server", {
+        client, user: req.session.user, guild
     })
 })
 
