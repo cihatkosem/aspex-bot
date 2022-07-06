@@ -93,55 +93,55 @@
                     </div>
                     <% let ownerGuild = guilds.filter(f => f.owner == true) %>
                     <% let adminGuild = guilds.filter(f => f.owner == false) %>
-                    <div class="flex justify-center <%= ownerGuild && adminGuild ? "grid-cols-2" : "grid-cols-1" %> gap-5">
+                    <div class="flex flex-wrap justify-between">
                         <% if (ownerGuild[0]) { %>
-                        <div>
-                        <p class="text-black">Kurucusu olduğunuz sunucular</p>
-                            <% ownerGuild.map(m => { %>
-                            <div onclick="location.href='/panel/<%= m.id %>'" class="cursor-pointer my-2 p-2 px-4 bg-primary rounded-3xl">
-                                <div class="flex flex-wrap items-center">
-                                    <div>
-                                        <% if (m.icon) { %>
-                                            <img class="max-h-6 max-w-6 rounded-full" 
-                                                src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
-                                        <% } %>
-                                        <% if (!m.icon) { %>
-                                            <img class="max-h-6 max-w-6 rounded-full" 
-                                                src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
-                                        <% } %>
+                            <div class="m-1">
+                                <p class="text-black">Kurucusu olduğunuz sunucular</p>
+                                <% ownerGuild.map(m => { %>
+                                    <div onclick="location.href='/panel/<%= m.id %>'" class="cursor-pointer my-2 p-2 px-3 bg-primary rounded-3xl">
+                                        <div class="flex flex-wrap items-center">
+                                            <div>
+                                                <% if (m.icon) { %>
+                                                    <img class="max-h-6 max-w-6 rounded-full" 
+                                                        src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
+                                                <% } %>
+                                                <% if (!m.icon) { %>
+                                                    <img class="max-h-6 max-w-6 rounded-full" 
+                                                        src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
+                                                <% } %>
+                                            </div>
+                                            <div class="pl-2">
+                                                <%= m.name %>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="pl-2">
-                                        <%= m.name %>
-                                    </div>
-                                </div>
+                                <% }) %>   
                             </div>
-                            <% }) %>   
-                        </div>
                         <% } %>  
                         <% if (adminGuild[0]) { %>
-                        <div>
-                        <p class="text-black">Yöneticisi olduğunuz sunucular</p>
-                            <% adminGuild.map(m => { %>
-                            <div onclick="location.href='/panel/<%= m.id %>'" class="cursor-pointer my-2 p-2 px-4 bg-primary rounded-3xl">
-                                <div class="flex flex-wrap items-center">
-                                    <div>
-                                        <% if (m.icon) { %>
-                                            <img class="max-h-6 max-w-6 rounded-full" 
-                                                src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
-                                        <% } %>
-                                        <% if (!m.icon) { %>
-                                            <img class="max-h-6 max-w-6rounded-full" 
-                                                src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
-                                        <% } %>
+                            <div class="m-1">
+                                <p class="text-black">Yöneticisi olduğunuz sunucular</p>
+                                <% adminGuild.map(m => { %>
+                                    <div onclick="location.href='/panel/<%= m.id %>'" class="cursor-pointer my-2 p-2 px-3 bg-primary rounded-3xl">
+                                        <div class="flex flex-wrap items-center">
+                                            <div>
+                                                <% if (m.icon) { %>
+                                                    <img class="max-h-6 max-w-6 rounded-full" 
+                                                        src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
+                                                <% } %>
+                                                <% if (!m.icon) { %>
+                                                    <img class="max-h-6 max-w-6 rounded-full" 
+                                                        src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
+                                                <% } %>
+                                            </div>
+                                            <div class="pl-2">
+                                                <%= m.name %>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="pl-2">
-                                        <%= m.name %>
-                                    </div>
-                                </div>
+                                <% }) %>   
                             </div>
-                            <% }) %>   
-                        </div>
-                        <% } %> 
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -156,7 +156,7 @@
         </div>
         <div class="flex items-end justify-end fixed bottom-0 right-0 mb-3 mr-3 z-10">
             <div class="bg-primary border-2 border-black text-sm rounded-3xl p-0.5 px-5 transform hover:scale-110">
-                beta version v0.1.6
+                beta version v0.1.8
             </div>
         </div>
         <footer class="footer footer-center mt-5 p-5 bg-primary text-primary-content rounded-3xl">
