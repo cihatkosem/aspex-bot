@@ -5,8 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css">
         <title><%= client.user.username %></title>
-        <% let clientAvatar = client.user.avatar ? `avatars/${client.user.id}/${client.user.avatar}.webp` : "embed/avatars/0.png" %>
-        <link rel="shortcut icon" href="https://cdn.discordapp.com/<%= clientAvatar %>">
+        <link rel="shortcut icon" href="<%= client.user.displayAvatarURL() %>">
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/daisyui@2.17.0/dist/full.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&amp;display=swap">
@@ -15,7 +14,7 @@
         <nav class="navbar">
             <div class="flex-1">
                 <div class="btn btn-ghost flex flex-wrap items-center">
-                    <img class="w-8 h-8 rounded-full mr-2" src="https://cdn.discordapp.com/<%= clientAvatar %>" alt="">
+                    <img class="w-8 h-8 rounded-full mr-2" src="<%= client.user.displayAvatarURL() %>" alt="">
                     <a onclick="location.href='/'" class="normal-case text-xl"><%= client.user.username %></a>
                 </div>
             </div>
@@ -54,11 +53,15 @@
                         <br>
                         Tam olarak tamamlanmadığını hataların / sorunların olabileceğini unutmayınız :)
                     </p>
-                    <button onclick="location.href='/panel'"  class="m-1 w-full rounded-md bg-indigo-600  py-2 text-indigo-100 hover:bg-indigo-500 hover:shadow-md duration-75">
+                    <button onclick="location.href='/panel'"  class="m-1 w-full rounded-md bg-indigo-700  py-2 text-indigo-100 hover:bg-indigo-600 hover:shadow-md duration-75">
                         Yönetim Paneline gitmek için tıklayınız. <i class="fa-solid fa-hand-pointer"></i>
                     </button>
-                    <button onclick="location.href='/hakkinda'"  class="m-1 w-full rounded-md bg-red-600  py-2 text-indigo-100 hover:bg-red-500 hover:shadow-md duration-75">
+                    <button onclick="location.href='/hakkinda'"  class="m-1 w-full rounded-md bg-red-700  py-2 text-indigo-100 hover:bg-red-600 hover:shadow-md duration-75">
                         Hakkında <i class="fa-solid fa-align-left"></i>
+                    </button>
+                    <button onclick="location.href='/hakkinda'" class="m-1 w-full flex flex-wrap justify-center items-center rounded-md bg-green-700 py-2 text-indigo-100 hover:bg-green-600 hover:shadow-md duration-75">
+                        <img class="max-w-6 max-h-6 rounded-full" src="<%= client.user.displayAvatarURL() %>" alt="">
+                        <p class="text-medium ml-2">Beni sunucuna davet et!</p>
                     </button>
                   </div>
                 </div>
@@ -66,17 +69,17 @@
         </div>
         <div class="p-6 my-2 bg-primary border-3 border-black rounded-3xl">
             <p class="text-xl font-semibold p-1">
-                En populer sunucular:
+                En popüler sunucular:
             </p>
             <div class="flex flex-wrap items-center justify-left p-1">
                 <% guilds.slice(0,100).map(m => { %>
-                <div onclick="location.href='/sunucular/<%= m.id %>'"
-                    class="m-1 bg-white cursor-pointer max-w-xl rounded-xl hover:rounded-2xl shadow-md duration-200">
-                  <div class="flex flex-wrap justify-between items-center p-2">
-                    <img class="max-w-8 max-h-8 rounded-full" src="<%= m.icon %>" alt="">
-                    <p class="text-medium text-gray-700 ml-2"><%= m.name %></p>
-                  </div>
-                </div>
+                    <div onclick="location.href='/sunucular/<%= m.id %>'"
+                        class="m-1 bg-white cursor-pointer max-w-xl rounded-xl hover:rounded-2xl shadow-md duration-200">
+                    <div class="flex flex-wrap justify-between items-center p-2">
+                        <img class="max-w-8 max-h-8 rounded-full" src="<%= m.icon %>" alt="">
+                        <p class="text-medium text-gray-700 ml-2"><%= m.name %></p>
+                    </div>
+                    </div>
                 <% }) %>
             </div>
         </div>

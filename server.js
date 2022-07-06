@@ -10,7 +10,7 @@ const intents = [
 
 const client = new Client({ intents, allowedMentions })
 
-const config = { prefix, token, owner, mongoURL, swears, instagramAccout } = require("./config.js")
+const config = { prefix, token, owner, developers, mongoURL, swears, instagramAccout, inviteLink, } = require("./config.js")
 const { localTime, swearBlocker, randomId, adBlocker, uppercaseBlocker, instagramUser, translate } = require("./functions.js")
 const fs = require("fs")
 const mongoose = require('mongoose')
@@ -54,7 +54,7 @@ client.login(process.env.TOKEN || token)
     .catch((err) => console.log("❎ Discord: Not Connection"))
 
 
-const hostURL = process.env.TOKEN ? `http://localhost:80` : `https://aspexbot.glitch.me`
+const hostURL = process.env.TOKEN ? `http://localhost:80` : `https://aspex.gq`
 
 let openSystemTry = 0;
 openSystem()
@@ -96,6 +96,11 @@ app.get("/hakkinda", async (req, res) => {
     })
 })
 
+app.get("/davet-et", async (req, res) => {
+    let URL = inviteLink.replace("clientId", `${client.user.id}`).replace("website", process.env.TOKEN ? "localhost" : "aspex.gq")
+    return res.redirect(URL)
+})
+
 passport.serializeUser((user, done) => { done(null, user) })
 passport.deserializeUser((obj, done) => { done(null, obj) })
 let clientID = process.env.clientID || config.clientID
@@ -126,7 +131,7 @@ app.get("/profil", async (req, res) => {
     let jointGuilds = req.session.user.guilds.filter(f => clientGuilds.includes(f.id))
     let guilds = jointGuilds.filter(f => (parseInt(f.permissions) & 0x8 === 0x8))
     return res.render("profile", {
-        client, user: req.session.user, guilds
+        client, user: req.session.user, guilds, config: { owner, developers }
     })
 })
 

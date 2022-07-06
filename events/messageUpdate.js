@@ -1,4 +1,4 @@
-const { client, config, Models, swearBlocker, adBlocker } = require("../server")
+const { client, config, Models, swearBlocker, adBlocker, uppercaseBlocker } = require("../server")
 const { Permissions, MessageEmbed, WebhookClient } = require("discord.js")
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {

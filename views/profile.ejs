@@ -57,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mt-16">
+                    <div class="mt-16 mb-4">
                         <h3 class="text-2xl text-slate-700 font-bold leading-normal mb-1">
                             <div class="flex flex-wrap items-center justify-center">
                                 <img class="w-10 h-full rounded-md mr-2" src="https://countryflagsapi.com/png/<%= user.locale %>">
@@ -68,15 +68,25 @@
                                 <div><p><%= user.email %></p></div>
                             </div>
                         </h3>
-                        <div class="flex justify-center text-center">
+                        <div class="flex flex-wrap justify-center text-center">
                             <% if (user.verified == true) { %>
-                                <div class="text-xs w-36 m-1 p-2 px-3 rounded-lg bg-blue-600">
+                                <div class="text-xs w-36 m-1 p-2 px-3 rounded-lg bg-blue-700">
                                     <i class="fa-solid fa-check mr-1"></i> Doğrulanmış
                                 </div>
                             <% } %>
                             <% if (user.verified == false) { %>
-                                <div class="text-xs w-36 m-1 p-2 px-3 rounded-lg bg-red-600">
+                                <div class="text-xs w-36 m-1 p-2 px-3 rounded-lg bg-red-700">
                                     <i class="fa-solid fa-xmark mr-1"></i> Doğrulanmamış
+                                </div>
+                            <% } %>
+                            <% if (config.owner == user.id) { %>
+                                <div class="text-xs w-36 m-1 p-2 px-3 rounded-lg bg-yellow-700">
+                                    <i class="fa-solid fa-crown"></i> Kurucu
+                                </div>
+                            <% } %>
+                            <% if (config.developers.includes(user.id)) { %>
+                                <div class="text-xs w-36 m-1 p-2 px-3 rounded-lg bg-purple-700">
+                                    <i class="fa-solid fa-code-simple"></i> Aspex Geliştiricisi
                                 </div>
                             <% } %>
                         </div>
@@ -92,11 +102,11 @@
                                 <div class="flex flex-wrap items-center">
                                     <div>
                                         <% if (m.icon) { %>
-                                            <img class="max-h-12 max-w-12 rounded-full" 
-                                                src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.webp" alt="">
+                                            <img class="max-h-6 max-w-6 rounded-full" 
+                                                src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
                                         <% } %>
                                         <% if (!m.icon) { %>
-                                            <img class="max-h-12 max-w-12 rounded-full" 
+                                            <img class="max-h-6 max-w-6 rounded-full" 
                                                 src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
                                         <% } %>
                                     </div>
@@ -116,11 +126,11 @@
                                 <div class="flex flex-wrap items-center">
                                     <div>
                                         <% if (m.icon) { %>
-                                            <img class="h-12 w-12 rounded-full" 
-                                                src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.webp" alt="">
+                                            <img class="max-h-6 max-w-6 rounded-full" 
+                                                src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
                                         <% } %>
                                         <% if (!m.icon) { %>
-                                            <img class="h-12 w-12 rounded-full" 
+                                            <img class="max-h-6 max-w-6rounded-full" 
                                                 src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
                                         <% } %>
                                     </div>
