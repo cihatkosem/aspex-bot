@@ -216,7 +216,6 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
             if (!webhook) {
                 return clientChannel.createWebhook(`${client.user.username} Bilgilendirme`, { avatar: client.user.displayAvatarURL() })
                 .then(async () => {
-                    console.log("hi")
                     await Models.guilds.updateOne(
                         { guildId: paramsGuild.id },
                         { 'settings.loginInfo': { status: "enable", channelId: req.query.joineduserchannel } }
@@ -232,7 +231,6 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
                         return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/joined-user-information`), 500)
                     }, 1500);
                 }).catch((err) => {
-                    console.log("hi-ups")
                     res.redirect(req.originalUrl)
                 })
             } else {
@@ -270,7 +268,6 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
             if (!webhook) {
                 return clientChannel.createWebhook(`${client.user.username} Bilgilendirme`, { avatar: client.user.displayAvatarURL() })
                 .then(async () => {
-                    console.log("hi")
                     await Models.guilds.updateOne(
                         { guildId: paramsGuild.id },
                         { 'settings.logoutInfo': { status: "enable", channelId: req.query.leaveduserchannel } }
@@ -286,7 +283,6 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
                         return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/leaved-user-information`), 500)
                     }, 1500);
                 }).catch((err) => {
-                    console.log("hi-ups")
                     res.redirect(req.originalUrl)
                 })
             } else {
@@ -303,6 +299,58 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
                         _modelfetch.save()
                     }
                     res.redirect(`/panel/${paramsGuild.id}/leaved-user-information`)
+                }, 1500);
+            }
+        }
+    }
+
+    if (req.query.spotifyinfochannel) {
+        if (!guildModel) return res.redirect(req.originalUrl)
+        let spotifyPresence = guildModel?.settings?.spotifyPresence
+        if (req.query.spotifyinfochannel == spotifyPresence.channelId) {
+            spotifyPresence.status = "disable"
+            spotifyPresence.channelId = ""
+            spotifyPresence.newMemberRoleId = ""
+            spotifyPresence.channelWebhookID = ""
+            spotifyPresence.channelWebhookTOKEN = ""
+            guildModel.save()
+        } else {
+            let clientChannel = client.guilds.cache.get(paramsGuild.id).channels.cache.get(req.query.spotifyinfochannel)
+            let webhook = fetchWebhook(req.query.spotifyinfochannel)
+            if (!webhook) {
+                return clientChannel.createWebhook(`${client.user.username} Bilgilendirme`, { avatar: client.user.displayAvatarURL() })
+                .then(async () => {
+                    await Models.guilds.updateOne(
+                        { guildId: paramsGuild.id },
+                        { 'settings.spotifyPresence': { status: "enable", channelId: req.query.spotifyinfochannel } }
+                    )
+                    setTimeout(async () => {
+                        let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
+                        let _spotifyPresence = _modelfetch?.settings?.spotifyPresence
+                        if (!_spotifyPresence.channelWebhookID || !_spotifyPresence.channelWebhookTOKEN) {
+                            _spotifyPresence.channelWebhookID = webhookfind.id
+                            _spotifyPresence.channelWebhookTOKEN = webhookfind.token
+                            _modelfetch.save()
+                        }
+                        return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/spotify-playing-information`), 500)
+                    }, 1500);
+                }).catch((err) => {
+                    res.redirect(req.originalUrl)
+                })
+            } else {
+                await Models.guilds.updateOne(
+                    { guildId: paramsGuild.id }, 
+                    { 'settings.spotifyPresence': { status: "enable", channelId: req.query.spotifyinfochannel } }
+                )
+                return setTimeout(async () => {
+                    let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
+                    let _spotifyPresence = _modelfetch?.settings?.spotifyPresence
+                    if (!_spotifyPresence.channelWebhookID || !_spotifyPresence.channelWebhookTOKEN) {
+                        _spotifyPresence.channelWebhookID = webhook.id
+                        _spotifyPresence.channelWebhookTOKEN = webhook.token
+                        _modelfetch.save()
+                    }
+                    res.redirect(`/panel/${paramsGuild.id}/spotify-playing-information`)
                 }, 1500);
             }
         }

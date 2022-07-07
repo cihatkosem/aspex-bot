@@ -8,6 +8,7 @@
         <% let clientAvatar = client.user.avatar ? `avatars/${client.user.id}/${client.user.avatar}.webp` : "embed/avatars/0.png" %>
         <link rel="shortcut icon" href="https://cdn.discordapp.com/<%= clientAvatar %>">
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
         <link href="https://cdn.jsdelivr.net/npm/daisyui@2.17.0/dist/full.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&amp;display=swap">
     </head>
@@ -16,7 +17,9 @@
             <div class="flex-1">
                 <div class="btn btn-ghost flex flex-wrap items-center">
                     <img class="w-8 h-8 rounded-full mr-2" src="https://cdn.discordapp.com/<%= clientAvatar %>" alt="">
-                    <a onclick="location.href='/'" class="normal-case text-xl"><%= client.user.username %></a>
+                    <a onclick="location.href='/'" class="normal-case text-xl">
+                        <%= client.user.username %> <%= guild ? " / " + guild.name : "" %>
+                    </a>
                 </div>
             </div>
             <div class="flex-none">
@@ -67,7 +70,9 @@
                 <div class="hidden md:inline lg:inline xl:inline 2xl:inline 3xl:inline 4xl:inline 
                             flex flex-col items-center bg-gray-900 text-purple-lighter w-16 m-1 p-2 rounded-3xl">
                     <% guilds.map(m => { %>
-                        <div onclick="location.href='/panel/<%= m.id %>'" class="cursor-pointer mb-2">
+                        <div onclick="location.href='/panel/<%= m.id %>'" 
+                            data-tooltip-target="tooltip-right-<%= m.id %>" data-tooltip-placement="right" type="button" 
+                            class="cursor-pointer mb-2">
                             <% if (m.icon) { %>
                                 <img class="easy duration-500 <%= guild && m.id == guild.id ? "rounded-xl" : "rounded-3xl hover:rounded-xl" %>" 
                                     src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
@@ -77,7 +82,12 @@
                                     src="https://cdn.discordapp.com/embed/avatars/1.png" alt="">
                             <% } %>
                         </div>
+                        <div id="tooltip-right-<%= m.id %>" role="tooltip" class="inline-block absolute invisible z-10 p-3 text-sm font-medium text-white bg-black rounded-lg shadow-sm opacity-0 tooltip">
+                            <%= m.name %>
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                     <% }) %>
+                    
                 </div>
                 
                 <% if (guild) { %>
@@ -104,13 +114,13 @@
                                         (Metin kanalının üzerine tıklamanız yeterlidir.)
                                     </div>
                                     <% let size = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m) %>
-                                    <div class="pt-2 px-2 flex flex-col grid gap-5
+                                    <div class="pt-2 px-3 flex flex-col grid gap-x-3
                                         <%= size[40] ? "grid-cols-5" : size[30] ? "grid-cols-4" : 
                                             size[20] ? "grid-cols-3" : size[10] ? "grid-cols-2" : "grid-cols-1" %>">
                                         <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
-                                            <form class="flex justify-left text-left">
-                                                <input class="w-0 h-0 relative" name="swearblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
-                                                <button type="submit" class="p-0.5">
+                                            <form class="flex">
+                                                <input class="w-0 h-0 absolute" name="swearblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
+                                                <button type="submit">
                                                     <% if (guildModel?.settings?.swearBlocker?.channels?.includes(m.id)) { %>
                                                         <span class="text-green-600"><i class="fa-solid fa-check"></i> <%= m.name %></span>
                                                     <% } %>
@@ -136,13 +146,13 @@
                                         (Metin kanalının üzerine tıklamanız yeterlidir.)
                                     </div>
                                     <% let size = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m) %>
-                                    <div class="pt-2 px-2 flex flex-col grid gap-5
+                                    <div class="pt-2 px-2 flex flex-col grid gap-x-3
                                         <%= size[40] ? "grid-cols-5" : size[30] ? "grid-cols-4" : 
                                             size[20] ? "grid-cols-3" : size[10] ? "grid-cols-2" : "grid-cols-1" %>">
                                         <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
-                                            <form class="flex justify-left text-left">
-                                                <input class="w-0 h-0 relative" name="adblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
-                                                <button type="submit" class="p-0.5">
+                                            <form class="flex">
+                                                <input class="w-0 h-0 absolute" name="adblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
+                                                <button type="submit">
                                                     <% if (guildModel?.settings?.adBlocker?.channels?.includes(m.id)) { %>
                                                         <span class="text-green-600"><i class="fa-solid fa-check"></i> <%= m.name %></span>
                                                     <% } %>
@@ -168,13 +178,13 @@
                                         (Metin kanalının üzerine tıklamanız yeterlidir.)
                                     </div>
                                     <% let size = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m) %>
-                                    <div class="pt-2 px-2 flex flex-col grid gap-5
+                                    <div class="pt-2 px-2 flex flex-col grid gap-x-3
                                         <%= size[40] ? "grid-cols-5" : size[30] ? "grid-cols-4" : 
                                             size[20] ? "grid-cols-3" : size[10] ? "grid-cols-2" : "grid-cols-1" %>">
                                         <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
                                             <form class="flex justify-left text-left">
-                                                <input class="w-0 h-0 relative" name="uppercaseblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
-                                                <button type="submit" class="p-0.5">
+                                                <input class="w-0 h-0 absolute" name="uppercaseblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
+                                                <button type="submit">
                                                     <% if (guildModel?.settings?.uppercaseBlocker?.channels?.includes(m.id)) { %>
                                                         <span class="text-green-600"><i class="fa-solid fa-check"></i> <%= m.name %></span>
                                                     <% } %>
@@ -273,9 +283,38 @@
                             <div>
                                 <div class="flex flex-col items-left bg-gray-900 text-purple-lighter m-1 p-2 rounded-3xl">
                                     <div class="font-semibold px-2">
-                                        Geliştirici bu içeriği henüz yayınlamadı.
+                                        #Spotify Müzik Bilgilendirme
+                                    </div>
+                                    <div class="text-sm px-2">
+                                        Sunucunuzdan bir kullanıcı Spotify'da müzik dinlediğinde bunu size bir metin kanalından bildirir.
                                         <br>
-                                        Ek bilgi için: help@drizzlydeveloper.xyz
+                                        (Hangi metin kanalından bilgilendirilmek istediğinizi seçiniz.)
+                                    </div>
+                                    <div class="pt-2 px-2">
+                                        <form>
+                                            <label for="spotifyinfochannel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
+                                                Bir metin kanalı seçiniz. 
+                                                (Özellik şuanda <%= guildModel?.settings?.spotifyPresence?.channelId ? "açıktır." : "kapalıdır." %>)
+                                            </label>
+                                            <select name="spotifyinfochannel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <% let channelsIds = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m.id) %>
+                                                <% if (channelsIds.includes(guildModel?.settings?.spotifyPresence?.channelId)) { %>
+                                                    <% let selectedChannel = guild.channels.cache.get(guildModel?.settings?.spotifyPresence?.channelId) %>
+                                                    <option class="p-1" value="<%= selectedChannel.id %>" selected>#<%= selectedChannel.name %></option>
+                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT" && f.id !== selectedChannel.id).map(m => m).map(m => { %>
+                                                        <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
+                                                    <% }) %>
+                                                <% } %>
+                                                <% if (!channelsIds.includes(guildModel?.settings?.spotifyPresence?.channelId)) { %>
+                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
+                                                        <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
+                                                    <% }) %>
+                                                <% } %>
+                                            </select>
+                                            <button type="submit" class="p-2 px-4 my-2 text-black bg-green-600 rounded-lg font-medium">
+                                                <i class="fa-solid fa-check"></i> Kaydet
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -352,5 +391,6 @@
                 <p>Copyright © 2022 - Tüm hakları Drizzly Developer kuruluşu ile saklıdır.</p>
             </div> 
         </footer>
+        <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
     </body>
 </html>
