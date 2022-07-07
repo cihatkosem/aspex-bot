@@ -33,7 +33,6 @@
                         </div>
                     </label>
                     <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-gray-900 rounded-box w-52">
-                        <li><a class="flex justify-center"><%= user.username %>#<%= user.discriminator %></a></li>     
                         <li><a onclick="location.href='/profil'"><i class="fa-solid fa-user-large"></i> Profil </a></li>                          
                         <li><a onclick="location.href='/cikisyap'"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a></li>
                     </ul>
@@ -68,11 +67,11 @@
             <div class="flex">
                 <!-- left bar servers -->
                 <div class="hidden md:inline lg:inline xl:inline 2xl:inline 3xl:inline 4xl:inline 
-                            flex flex-col items-center bg-gray-900 text-purple-lighter w-16 m-1 p-2 rounded-3xl">
+                            flex flex-col items-center bg-gray-900 text-purple-lighters m-1 p-2 rounded-3xl">
                     <% guilds.map(m => { %>
                         <div onclick="location.href='/panel/<%= m.id %>'" 
                             data-tooltip-target="tooltip-right-<%= m.id %>" data-tooltip-placement="right" type="button" 
-                            class="cursor-pointer mb-2">
+                            class="cursor-pointer mb-2 w-12">
                             <% if (m.icon) { %>
                                 <img class="easy duration-500 <%= guild && m.id == guild.id ? "rounded-xl" : "rounded-3xl hover:rounded-xl" %>" 
                                     src="https://cdn.discordapp.com/icons/<%= m.id %>/<%= m.icon %>.<%= m.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
@@ -92,16 +91,31 @@
                 
                 <% if (guild) { %>
                     <div class="flex flex-wrap">
-                        <div>
-                            <div class="flex flex-col items-center bg-gray-900 text-purple-lighter w-72 m-1 p-2 rounded-3xl">
-                                <% settings.map(m => { %>
-                                    <div onclick="location.href='/panel/<%= guild.id %>/<%= m.tag %>'" 
-                                        class="flex w-full cursor-pointer p-2 mb-2 <%= setting && setting == m.tag ? "text-blue-400" : "" %> hover:text-blue-400 easy duration-500">
-                                        <div><i class="fa-solid fa-hashtag"></i><%= m.name %></div>
+                        <% if (!setting) { %>
+                            <div class="text-black dark:text-gray-200 p-2 antialiased flex min-w-lg">
+                                <img class="rounded-full w-12 h-12 m-1 easy duration-500 border-2 border-[#ffffff00] hover:border-black border-opacity-50" 
+                                    src="https://cdn.discordapp.com/<%= clientAvatar %>">
+                                <div>
+                                    <div class="bg-gray-900 rounded-3xl px-4 pt-2 pb-2.5">
+                                        <a class="font-semibold text-sm leading-relaxed">
+                                            <%= client.user.username %> Sistem Mesajı
+                                        </a>
+                                        <div class="text-normal leading-snug md:leading-normal">
+                                            Merhaba, <br>
+                                            Altta yer alan seçenekleri seçerek ayarları düzenleyebilirsin.
+                                        </div>
                                     </div>
-                                <% }) %>
+                                </div>
                             </div>
-                        </div> 
+                        <% } %>
+                        <div class="flex flex-wrap">
+                            <% settings.map(m => { %>
+                                <div onclick="location.href='/panel/<%= guild.id %>/<%= m.tag %>'" 
+                                    class="flex bg-gray-900 rounded-3xl cursor-pointer p-2 px-4 m-1 <%= setting && setting == m.tag ? "text-blue-500" : "" %> hover:text-blue-500 easy duration-500">
+                                    <div><i class="fa-solid fa-hashtag"></i><%= m.name %></div>
+                                </div>
+                            <% }) %>
+                        </div>
                         <% if (setting == "swear-blocker") { %>
                             <div>
                                 <div class="flex flex-col items-left bg-gray-900 text-purple-lighter m-1 p-2 rounded-3xl">
@@ -352,26 +366,23 @@
                                 </div>
                             </div>
                         <% } %>
-                        <% if (!setting) { %>
-                            <div class="hidden lg:inline xl:inline 2xl:inline 3xl:inline">
-                                <!-- not selected server settings box -->
-                                <div class="flex flex-col items-center bg-gray-900 text-purple-lighter m-1 p-2 rounded-3xl">
-                                    <div class="p-2">
-                                        Dostum tekrardan merhaba... <br>
-                                        Soldaki menüden hangi ayarlarını değiştirmek istediğiniz seçebilirsin.
-                                    </div>
-                                </div>
-                            </div>
-                        <% } %>
                     </div>
                 <% } %>
                 <% if (!guild) { %>
-                    <div class="hidden lg:inline xl:inline 2xl:inline 3xl:inline">
-                        <!-- not selected server settings box -->
-                        <div class="flex flex-col items-center bg-gray-900 text-purple-lighter m-1 p-2 rounded-3xl">
-                            <div class="p-2">
-                                Dostum hoşgeldin... <br>
-                                Soldaki menüden ayarlarını değiştirmek istediğiniz sunucuyu seçebilirsin.
+                    <div class="flex flex-wrap">
+                        <div class="text-black dark:text-gray-200 p-4 antialiased flex min-w-lg">
+                            <img class="rounded-full w-12 h-12 m-1 easy duration-500 border-2 border-[#ffffff00] hover:border-black border-opacity-50" 
+                                src="https://cdn.discordapp.com/<%= clientAvatar %>">
+                            <div>
+                                <div class="bg-gray-900 rounded-3xl px-4 pt-2 pb-2.5">
+                                    <a class="font-semibold text-sm leading-relaxed">
+                                        <%= client.user.username %> Sistem Mesajı
+                                    </a>
+                                    <div class="text-normal leading-snug md:leading-normal">
+                                        Merhaba, <br>
+                                        Soldaki menüden ayarlarını değiştirmek istediğiniz sunucuyu seçebilirsin.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -380,7 +391,7 @@
         </div>
         <div class="flex items-end justify-end fixed bottom-0 right-0 mb-3 mr-3 z-10">
             <div class="bg-primary border-2 border-black text-sm rounded-3xl p-0.5 px-5 transform hover:scale-110">
-                beta version v0.1.8
+                beta version v0.2.1
             </div>
         </div>
         <footer class="footer footer-center mt-5 p-5 bg-primary text-primary-content rounded-3xl">
