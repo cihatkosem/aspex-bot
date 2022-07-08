@@ -8,33 +8,36 @@
         <% let clientAvatar = client.user.avatar ? `avatars/${client.user.id}/${client.user.avatar}.webp` : "embed/avatars/0.png" %>
         <link rel="shortcut icon" href="https://cdn.discordapp.com/<%= clientAvatar %>">
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
         <link href="https://cdn.jsdelivr.net/npm/daisyui@2.17.0/dist/full.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&amp;display=swap">
     </head>
     <body class="select-none bg-black min-h-screen text-white p-2">
         <nav class="navbar">
-            <div class="flex-1">
+            <div  onclick="location.href='/'" class="flex-1 cursor-pointer">
                 <div class="btn btn-ghost flex flex-wrap items-center">
                     <img class="w-8 h-8 rounded-full mr-2" src="https://cdn.discordapp.com/<%= clientAvatar %>" alt="">
-                    <a onclick="location.href='/'" class="normal-case text-xl"><%= client.user.username %></a>
+                    <a class="normal-case text-xl">
+                        <%= client.user.username %>
+                    </a>
                 </div>
             </div>
-            <div class="flex-none">
-                <% if (user) { %>
-                <div class="dropdown dropdown-end">
-                    <label tabindex="0">
-                        <% let avatar = user.avatar ? `avatars/${user.id}/${user.avatar}.webp` : "embed/avatars/0.png" %>
-                        <div class="btn btn-ghost flex flex-wrap items-center">
-                            <a class="normal-case text-xl"><%= user.username %></a>
-                            <img class="w-8 h-8 rounded-full ml-2" src="https://cdn.discordapp.com/<%= avatar %>" alt="">
-                        </div>
-                    </label>
-                    <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-gray-900 rounded-box w-52">
-                        <li><a onclick="location.href='/profil'"><i class="fa-solid fa-user-large"></i> Profil </a></li>                          
-                        <li><a onclick="location.href='/cikisyap'"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a></li>
-                    </ul>
-                </div>
-            </div>
+            <% if (user) { %>
+                <div class="flex-none">
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0">
+                            <% let avatar = user.avatar ? `avatars/${user.id}/${user.avatar}.webp` : "embed/avatars/0.png" %>
+                            <div class="btn btn-ghost flex flex-wrap items-center">
+                                <a class="normal-case text-xl"><%= user.username %></a>
+                                <img class="w-8 h-8 rounded-full ml-2" src="https://cdn.discordapp.com/<%= avatar %>" alt="">
+                            </div>
+                        </label>
+                        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-gray-900 rounded-box w-52">
+                            <li><a onclick="location.href='/profil'"><i class="fa-solid fa-user-large"></i> Profil </a></li>                          
+                            <li><a onclick="location.href='/cikisyap'"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a></li>
+                        </ul>
+                    </div>
+                </div>  
             <% } %>
             <% if (!user) { %>
                 <div class="flex-none">
@@ -45,21 +48,44 @@
             <% } %>
         </nav>
         <div class="p-6 my-2 bg-primary border-3 border-black rounded-3xl">
-            <div class="flex items-center justify-center px-4">
-                <div class="max-w-xl overflow-hidden rounded-xl bg-white shadow-md duration-200 hover:scale-110 hover:rounded-3xl hover:shadow-xl">
-                  <div class="p-2">
-                    <p class="text-medium mb-5 text-gray-700">
-                        <div class="flex flex-wrap justify-center items-center p-2">
-                            <img class="max-w-8 max-h-8 rounded-full" 
-                                src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.<%= guild.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
-                            <p class="text-medium text-gray-700 ml-2"><%= guild.name %></p>
+            <div class="flex items-center justify-center px-8">
+                <div class="px-8 max-w-xl overflow-hidden rounded-xl bg-white shadow-md duration-200 hover:scale-105 hover:rounded-3xl hover:shadow-xl">
+                    <div class="p-2 pt-6">
+                        <p class="text-medium text-gray-700">
+                            <div class="flex flex-wrap justify-center items-center">
+                                <img class="max-w-8 max-h-8 rounded-full" 
+                                    src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.<%= guild.icon.startsWith("a_") ? "gif" : "png" %>" alt="">
+                                <p class="text-medium text-gray-700 ml-2"><%= guild.name %></p>
+                            </div>
+                            <br>
+                        </p>
+                    </div>
+                    <div class="px-2 max-w-xl">
+                        <% if (guild.banner) { %>
+                            <div>
+                                <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.banner %>.<%= guild.banner.startsWith("a_") ? "gif" : "png" %>?size=512" alt="">
+                            </div>
+                        <% } %>
+                        <div class="p-2">
+                            <div class="m-1">
+                                <p class="text-sm font-bold text-gray-800 m-0.5"> Sunucunun Sahibi: </p>
+                                <p class="flex text-sm text-gray-800 m-0.5">
+                                    <a class="hover:text-blue-600 duration-500" 
+                                        href="http://discord.com/users/<%= guild.owner.user.id %>">
+                                        <%= guild.owner.user.tag %>
+                                    </a>
+                                </p>
+                            </div>
+                            <% if (guild.description) { %>
+                                <div class="m-1">
+                                    <p class="text-sm font-bold text-gray-800 m-0.5"> Sunucu Hakkında: </p>
+                                    <p class="text-sm text-gray-800 m-0.5">
+                                        <%= guild.description %>
+                                    </p>
+                                </div>
+                            <% }%>
                         </div>
-                        <br>
-                    </p>
-                    <a class="m-2 p-2 w-full text-indigo-800">
-                        Bu sayfa geliştirilme aşamasındadır...
-                    </a>
-                  </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -139,6 +139,8 @@ app.get(["/sunucular", "/sunucular/", "/sunucular/:id"], async (req, res) => {
     if (!req.params.id) return res.redirect("/")
     let guild = client.guilds.cache.get(req.params.id)
     if (!guild) return res.redirect("/")
+
+    guild.owner = guild.members.cache.get(guild.ownerId)
     return res.render("server", {
         client, user: req.session.user, guild
     })
