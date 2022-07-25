@@ -18,8 +18,8 @@ module.exports = {
       pass: "31!62!"
     },
     activityes: [ 
-      { text: "✅ website | /yardım", waitSecond: "20" },
-      { text: "✅ drizzlydeveloper.xyz", waitSecond: "5" }
+      { text: "website | /yardım", waitSecond: "20" },
+      { text: "drizzlydeveloper.xyz", waitSecond: "5" }
     ],
     settings: [
       { name: "Kötü Söz Engelleyici", tag: "swear-blocker" },
