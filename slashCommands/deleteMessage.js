@@ -1,5 +1,8 @@
+const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord.js');
+const { log } = require('../server');
+
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "message-manager",
     name: "temizle",
     description: "Mesajları temizlemek için kullanılır.",
@@ -7,7 +10,7 @@ module.exports = {
         {
             name: "miktar",
             description: "Belirttiğiniz miktarda mesaj silinir.",
-            type: "NUMBER",
+            type: ApplicationCommandOptionType.Number,
             required: true,
         },
     ],
@@ -21,8 +24,8 @@ module.exports = {
             let limiting = "Tek seferde en fazla 100 mesaj silinebilir."
             let txt = `${quantity > 100 && deleted.size == 100 ? `\n ${limiting}` + `\n Buyüzden fazla gelen ${quantity - 100} mesaj silinemedi.` : ""}`
 
-            await interaction.reply({ content: `Toplam \`${deleted.size + 1}\` mesajı sildim.` + txt }).catch((err) => { })
-            setTimeout(async () => await interaction.deleteReply().catch((err) => { }), 7000)
+            await interaction.reply({ content: `Toplam \`${deleted.size + 1}\` mesajı sildim.` + txt }).catch((e) => log(e))
+            setTimeout(async () => await interaction.deleteReply().catch((e) => log(e)), 7000)
         })
         return;
     }

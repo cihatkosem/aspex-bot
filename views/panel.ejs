@@ -12,7 +12,8 @@
         <link href="https://cdn.jsdelivr.net/npm/daisyui@2.17.0/dist/full.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&amp;display=swap">
     </head>
-    <body class="select-none bg-black min-h-screen text-white p-2">
+    <body class="select-none bg-black min-h-screen text-white p-2" 
+        onload="loader('popup','../../../pages/popup.ejs'); loader('footer','../../../pages/footer.ejs');">
         <nav class="navbar">
             <div class="flex-1">
                 <div class="btn btn-ghost flex flex-wrap items-center">
@@ -140,11 +141,11 @@
                                         <br>
                                         (Metin kanalının üzerine tıklamanız yeterlidir.)
                                     </div>
-                                    <% let size = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m) %>
+                                    <% let size = guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m) %>
                                     <div class="pt-2 px-3 flex flex-col grid gap-x-3
                                         <%= size[40] ? "grid-cols-5" : size[30] ? "grid-cols-4" : 
                                             size[20] ? "grid-cols-3" : size[10] ? "grid-cols-2" : "grid-cols-1" %>">
-                                        <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
+                                        <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m).map(m => { %>
                                             <form class="flex">
                                                 <input class="w-0 h-0 absolute" name="swearblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
                                                 <button type="submit">
@@ -172,11 +173,11 @@
                                         <br>
                                         (Metin kanalının üzerine tıklamanız yeterlidir.)
                                     </div>
-                                    <% let size = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m) %>
+                                    <% let size = guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m) %>
                                     <div class="pt-2 px-2 flex flex-col grid gap-x-3
                                         <%= size[40] ? "grid-cols-5" : size[30] ? "grid-cols-4" : 
                                             size[20] ? "grid-cols-3" : size[10] ? "grid-cols-2" : "grid-cols-1" %>">
-                                        <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
+                                        <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m).map(m => { %>
                                             <form class="flex">
                                                 <input class="w-0 h-0 absolute" name="adblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
                                                 <button type="submit">
@@ -204,11 +205,11 @@
                                         <br>
                                         (Metin kanalının üzerine tıklamanız yeterlidir.)
                                     </div>
-                                    <% let size = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m) %>
+                                    <% let size = guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m) %>
                                     <div class="pt-2 px-2 flex flex-col grid gap-x-3
                                         <%= size[40] ? "grid-cols-5" : size[30] ? "grid-cols-4" : 
                                             size[20] ? "grid-cols-3" : size[10] ? "grid-cols-2" : "grid-cols-1" %>">
-                                        <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
+                                        <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m).map(m => { %>
                                             <form class="flex justify-left text-left">
                                                 <input class="w-0 h-0 absolute" name="uppercaseblockerchannel" id="<%= m.id %>" value="<%= m.id %>" required>
                                                 <button type="submit">
@@ -243,16 +244,16 @@
                                                 (Özellik şuanda <%= guildModel?.settings?.loginInfo?.channelId ? "açıktır." : "kapalıdır." %>)
                                             </label>
                                             <select name="joineduserchannel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <% let channelsIds = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m.id) %>
+                                                <% let channelsIds = guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m.id) %>
                                                 <% if (channelsIds.includes(guildModel?.settings?.loginInfo?.channelId)) { %>
                                                     <% let selectedChannel = guild.channels.cache.get(guildModel?.settings?.loginInfo?.channelId) %>
                                                     <option class="p-1" value="<%= selectedChannel.id %>" selected>#<%= selectedChannel.name %></option>
-                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT" && f.id !== selectedChannel.id).map(m => m).map(m => { %>
+                                                    <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText && f.id !== selectedChannel.id).map(m => m).map(m => { %>
                                                         <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
                                                     <% }) %>
                                                 <% } %>
                                                 <% if (!channelsIds.includes(guildModel?.settings?.loginInfo?.channelId)) { %>
-                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
+                                                    <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m).map(m => { %>
                                                         <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
                                                     <% }) %>
                                                 <% } %>
@@ -283,16 +284,16 @@
                                                 (Özellik şuanda <%= guildModel?.settings?.logoutInfo?.channelId ? "açıktır." : "kapalıdır." %>)
                                             </label>
                                             <select name="leaveduserchannel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <% let channelsIds = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m.id) %>
+                                                <% let channelsIds = guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m.id) %>
                                                 <% if (channelsIds.includes(guildModel?.settings?.logoutInfo?.channelId)) { %>
                                                     <% let selectedChannel = guild.channels.cache.get(guildModel?.settings?.logoutInfo?.channelId) %>
                                                     <option class="p-1" value="<%= selectedChannel.id %>" selected>#<%= selectedChannel.name %></option>
-                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT" && f.id !== selectedChannel.id).map(m => m).map(m => { %>
+                                                    <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText && f.id !== selectedChannel.id).map(m => m).map(m => { %>
                                                         <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
                                                     <% }) %>
                                                 <% } %>
                                                 <% if (!channelsIds.includes(guildModel?.settings?.logoutInfo?.channelId)) { %>
-                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
+                                                    <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m).map(m => { %>
                                                         <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
                                                     <% }) %>
                                                 <% } %>
@@ -324,16 +325,16 @@
                                                 (Özellik şuanda <%= guildModel?.settings?.spotifyPresence?.channelId ? "açıktır." : "kapalıdır." %>)
                                             </label>
                                             <select name="spotifyinfochannel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <% let channelsIds = guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m.id) %>
+                                                <% let channelsIds = guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m.id) %>
                                                 <% if (channelsIds.includes(guildModel?.settings?.spotifyPresence?.channelId)) { %>
                                                     <% let selectedChannel = guild.channels.cache.get(guildModel?.settings?.spotifyPresence?.channelId) %>
                                                     <option class="p-1" value="<%= selectedChannel.id %>" selected>#<%= selectedChannel.name %></option>
-                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT" && f.id !== selectedChannel.id).map(m => m).map(m => { %>
+                                                    <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText && f.id !== selectedChannel.id).map(m => m).map(m => { %>
                                                         <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
                                                     <% }) %>
                                                 <% } %>
                                                 <% if (!channelsIds.includes(guildModel?.settings?.spotifyPresence?.channelId)) { %>
-                                                    <% guild.channels.cache.filter(f => f.type == "GUILD_TEXT").map(m => m).map(m => { %>
+                                                    <% guild.channels.cache.filter(f => f.type == ChannelType.GuildText).map(m => m).map(m => { %>
                                                         <option class="p-1" value="<%= m.id %>">#<%= m.name %></option>
                                                     <% }) %>
                                                 <% } %>
@@ -380,9 +381,9 @@
                             </div>
                         <% } %>
                         <div class="flex flex-wrap">
-                            <% settings.map(m => { %>
+                            <% guild.settings.map(m => { %>
                                 <div onclick="location.href='/panel/<%= guild.id %>/<%= m.tag %>'" 
-                                    class="flex bg-gray-900 rounded-3xl cursor-pointer p-2 px-4 m-1 <%= setting && setting == m.tag ? "text-blue-500" : "" %> hover:text-blue-500 easy duration-500">
+                                    class="flex bg-gray-900 items-center h-8 rounded-3xl cursor-pointer px-4 m-1 <%= setting && setting == m.tag ? "text-blue-500" : "" %> hover:text-blue-500 easy duration-500">
                                     <div><i class="fa-solid fa-hashtag"></i><%= m.name %></div>
                                 </div>
                             <% }) %>
@@ -401,7 +402,7 @@
                                     </a>
                                     <div class="text-normal leading-snug md:leading-normal">
                                         Merhaba, <br>
-                                        Soldaki menüden ayarlarını değiştirmek istediğiniz sunucuyu seçebilirsin.
+                                        Menüden ayarlarını değiştirmek istediğiniz sunucuyu seçebilirsin.
                                     </div>
                                 </div>
                             </div>
@@ -410,19 +411,14 @@
                 <% } %>
             </div>
         </div>
-        <div class="flex items-end justify-end fixed bottom-0 right-0 mb-3 mr-3 z-10">
-            <div class="bg-primary border-2 border-black text-sm rounded-3xl p-0.5 px-5 transform hover:scale-110">
-                beta version v0.2.1
-            </div>
-        </div>
-        <footer class="footer footer-center mt-5 p-5 bg-primary text-primary-content rounded-3xl">
-            <div>
-                <p class="font-bold">
-                    Teknik destek/sorun/öneri vs. için help@drizzlydeveloper.xyz
-                </p>
-                <p>Copyright © 2022 - Tüm hakları Drizzly Developer kuruluşu ile saklıdır.</p>
-            </div> 
-        </footer>
-        <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
+        <div id="footer"></div>
+        <div id="popup"></div>
+        <script>
+            function loader(ElementId, File) {
+                let element = document.getElementById(ElementId)
+                fetch(File).then(res => res.text())
+                    .then(x => element.innerHTML = x.replace("[% packageVersion ]",`<%= version %>`))
+            }
+        </script>
     </body>
 </html>

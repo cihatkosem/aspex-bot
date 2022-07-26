@@ -1,8 +1,8 @@
+const { ApplicationCommandType, ApplicationCommandOptionType, EmbedBuilder } = require("discord.js")
 const { localTime, Models, config } = require("../server")
-const { MessageEmbed } = require("discord.js")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "administrator",
     name: "mesaj-ekle",
     description: "Sunucunuzda yazılan mesaja özel cevap ekleyebilirsiniz.",
@@ -10,7 +10,7 @@ module.exports = {
         {
             name: "nasıl_kullanılsın",
             description: "Mesajın nasıl kullanılabileceğini seçiniz.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
             choices: [
                 { name: "prefix olmadan", value: "message-noprefix" }
@@ -19,13 +19,13 @@ module.exports = {
         {
             name: "gelen_mesaj",
             description: "Kullanıcının cevaplanacak olan mesajını yazınız.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
         },
         {
             name: "gelen_mesaj_engellensin_mi",
             description: "Gelen mesaj sunucunuzda istenmiyorsa eğer engelleyebiliriz. Lütfen bunu seçiniz.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
             choices: [
                 { name: "evet", value: "message-blocked" },
@@ -35,7 +35,7 @@ module.exports = {
         {
             name: "gönderilecek_mesaj",
             description: "Botun gelen mesaja göndereceği mesajı yazınız.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true,
         },
     ],
@@ -69,7 +69,7 @@ module.exports = {
             }
         }, { upsert: true })
             .then(() => {
-                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                     .setDescription(
                         `> ** Sunucuya Özel Mesaja Cevap Başarıyla Eklendi.**\n` +
                         `> Bu mesajı oluşturan: <@${interaction.member.id}> _[${interaction.member.id}](http://drizzlydeveloper.xyz/api/discord/users/${interaction.member.id})_ \n` +

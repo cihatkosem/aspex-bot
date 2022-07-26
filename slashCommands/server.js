@@ -1,13 +1,13 @@
-const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require("discord.js")
+const { ApplicationCommandType, EmbedBuilder, ActionRowBuilder, SelectMenuBuilder } = require("discord.js")
 const { config } = require("../server")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "administrator",
     name: "sunucu",
     description: "Sunucu hakkında bilgileri gösterir.",
     run: async (client, interaction, args) => {
-        const menu = new MessageSelectMenu().setCustomId('server').setPlaceholder('Görmek istediğinizi seçiniz.')
+        const menu = new SelectMenuBuilder().setCustomId('server').setPlaceholder('Görmek istediğinizi seçiniz.')
             .addOptions([
                 {
                     label: 'Ayarlar',
@@ -23,9 +23,9 @@ module.exports = {
                 */
             ])
 
-        const row = new MessageActionRow().addComponents(menu)
+        const row = new ActionRowBuilder().addComponents(menu)
 
-        let embed = new MessageEmbed().setColor(config.color)
+        let embed = new EmbedBuilder().setColor(config.color)
             .setTimestamp()
             .setFooter({ text: `${client.user.username} • Drizzly Developer`, iconURL: client.user.displayAvatarURL() })
             .setDescription(`Sunucuya ait hangi veriye ulaşmak istediğinizi seçiniz.`)

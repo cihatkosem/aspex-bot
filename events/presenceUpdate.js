@@ -1,5 +1,5 @@
+const { WebhookClient, EmbedBuilder, ChannelType } = require("discord.js")
 const { client, config, Models } = require("../server")
-const { WebhookClient, MessageEmbed } = require("discord.js")
 
 client.on('presenceUpdate', async (oldPresence, newPresence) => {
     let modelfetch = await Models.guilds.findOne({ guildId: newPresence?.guild?.id })
@@ -21,7 +21,7 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
 
     let fetchWebhook = webhook("Kullanıcının Özel Durumu Değiştiğinde")
     if (fetchWebhook && newCustomStatus && oldCustomStatus?.state !== newCustomStatus?.state) {
-        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
         .setDescription(
             `> **Kullanıcının Özel Durumu Değişmesi - Bilgilendirme Sistemi** \n` +
             `> Durumunu değiştiren kullanıcı: <@${newPresence.userId}>\n` +
@@ -43,7 +43,7 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
         let webhookfind = webhooksFetch?.filter(f => f.name == "Aspex Bilgilendirme").map(m => m)[0]
 
         let systemChannelId = client.guilds.cache.get(modelfetch.guildId).systemChannelId
-        let firstChannelId = client.guilds.cache.get(modelfetch.guildId).channels.cache.filter(f => f.type == "GUILD_TEXT")?.map(m => m)[0]?.id
+        let firstChannelId = client.guilds.cache.get(modelfetch.guildId).channels.cache.filter(f => f.type == ChannelType.GuildText)?.map(m => m)[0]?.id
         let MessageChannel = client.guilds.cache.get(modelfetch.guildId).channels.cache.get(systemChannelId ? systemChannelId : firstChannelId)
 
         if (!webhooksFetch || !webhookfind)
@@ -68,7 +68,7 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
 
         let Info = new WebhookClient({ url: spotifyWebhookURL })
         let spotifyImg = "https://play-lh.googleusercontent.com/UrY7BAZ-XfXGpfkeWg0zCCeo-7ras4DCoRalC_WXXWTK9q5b0Iw7B0YQMsVxZaNB7DM"
-        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
             .setAuthor({
                 name: newSpotify.details + " / " + newSpotify.state,
                 iconURL: `https://i.scdn.co/image/${newSpotify.assets.largeImage.slice(8)}`,

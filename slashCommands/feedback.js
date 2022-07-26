@@ -1,23 +1,23 @@
-const { MessageActionRow, Modal, TextInputComponent } = require("discord.js")
+const { ApplicationCommandType, ActionRowBuilder, ModalBuilder, TextInputBuilder } = require("discord.js")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "members",
     name: "geri-bildirim",
     description: "Discord botu hakkında geri bildirim göndermenizi sağlar.",
     run: async (client, interaction, args) => {
-        const modal = new Modal().setCustomId('feedback').setTitle('Geri Bildirim')
-
-        const feedback_descriptionInput = new TextInputComponent()
-            .setCustomId('feedback_description')
+        const description = new TextInputBuilder()
+            .setMaxLength(500).setMinLength(100).setRequired(true)
+            .setCustomId('description')
             .setLabel("Lütfen bildirmek istediğiniz konuyu yazınız.")
             .setStyle('PARAGRAPH')
 
-        const secondActionRow = new MessageActionRow().addComponents(feedback_descriptionInput)
+        const secondActionRow = new ActionRowBuilder().addComponents(description)
 
-        modal.addComponents(secondActionRow)
+        const modal = new ModalBuilder().setCustomId('feedback')
+            .setTitle('Geri Bildirim')
+            .addComponents(secondActionRow)
 
-        await interaction.showModal(modal)
-        return;
+        return await interaction.showModal(modal)
     }
 }

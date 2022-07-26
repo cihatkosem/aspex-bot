@@ -1,8 +1,8 @@
+const { ApplicationCommandType, ApplicationCommandOptionType, EmbedBuilder } = require("discord.js")
 const { config, Models } = require("../server")
-const { MessageEmbed } = require("discord.js")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "administrator",
     name: "mesajlar",
     description: "Sunucunuzda yazılan özel cevap verilen mesaj hakkında detayları görebilirsin.",
@@ -10,7 +10,7 @@ module.exports = {
         {
             name: "mesaj",
             description: "Hangi mesaj hakkında detaylı bilgiyi görmek istiyorsunuz?",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: false
         }
     ],
@@ -22,7 +22,7 @@ module.exports = {
         if (message) {
             let messagesFilter = guildData.messages?.filter(f => f.receivedMessage == message.toLowerCase())[0]
             if (!messagesFilter) return interaction.reply({ content: `Belirttiğiniz mesaja özel bir cevap bulunmuyor.`, ephemeral: true })
-            let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+            let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> ** Sunucuya Özel Mesaja Cevap - ${messagesFilter.receivedMessage}**\n` +
                     `> Bu mesajı oluşturan: <@${messagesFilter.ownerId}> _[${messagesFilter.ownerId}](http://drizzlydeveloper.xyz/api/discord/users/${messagesFilter.ownerId})_ \n` +
@@ -36,7 +36,7 @@ module.exports = {
             interaction.reply({ embeds: [embed] })
         }
 
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
             .setColor(config.color)
             .setDescription(
                 guildData.messages[0] ?

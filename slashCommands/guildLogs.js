@@ -1,8 +1,8 @@
+const { ApplicationCommandType, ApplicationCommandOptionType, EmbedBuilder } = require("discord.js")
 const { localTime, Models, config } = require("../server")
-const { MessageEmbed } = require("discord.js")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "administrator",
     name: "sunucu-günlükleri",
     description: "Sunucunuzda gerçekleşen olayları deteylıca incelemenizi sağlar.",
@@ -10,7 +10,7 @@ module.exports = {
         {
             name: "günlükler",
             description: "Hangi günlüğün size bildirileceğini seçiniz.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: false,
             choices: [
                 { name: "Kötü Söz Engellendiğinde", value: "log-v1" },
@@ -24,7 +24,7 @@ module.exports = {
         {
             name: "channel",
             description: "Bu özelliği açmak veya kaldırmak istediğinizi kanalı seçiniz.",
-            type: "CHANNEL",
+            type: ApplicationCommandOptionType.Channel,
             required: false,
         }
     ],
@@ -58,7 +58,7 @@ module.exports = {
         if (!logs) {
             let onTxt = "kanalında açık. \n"
             let offTxt = "_bu özellik kapalıdır._\n"
-            let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+            let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **Aktif Olan Sunucu Günlükleri** \n` +
                     guildData?.logs?.map(m => `> ${m.name}: <#${m.channelId}> kanalına gönderilir.`).join(" \n") + " \n\n" + 
@@ -76,7 +76,7 @@ module.exports = {
 
         if (!channel) {
             if (!findLog) return interaction.reply({ content: `${Text} bilgi mesajı gönderme sistemi aktif edilmemiştir.` })
-            let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+            let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **${findLog.name}** \n` +
                     `> Özelliği açan: <@${findLog.ownerId}> \n` +

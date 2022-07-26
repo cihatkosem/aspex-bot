@@ -1,5 +1,5 @@
 const { client, config, Models, swearBlocker, adBlocker, uppercaseBlocker } = require("../server")
-const { Permissions, MessageEmbed, WebhookClient } = require("discord.js")
+const { Permissions, EmbedBuilder, WebhookClient } = require("discord.js")
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {
     if (newMessage.author.bot == true) return;
@@ -24,7 +24,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
                 .catch((err) => { })
             let fetchWebhook = webhook("Kötü Söz Engellendiğinde")
             if (fetchWebhook) {
-                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **Kötü Söz Engelleme - Bilgilendirme Sistemi** \n` +
                     `> <#${newMessage.channel.id}> metin kanalında <@${newMessage.author.id}> kişisi kötü söz kullandı.\n` +
@@ -47,7 +47,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
                 .catch((err) => { })
             let fetchWebhook = webhook("Reklam Engellendiğinde")
             if (fetchWebhook) {
-                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **Reklam Engelleme - Bilgilendirme Sistemi** \n` +
                     `> <#${newMessage.channel.id}> metin kanalında <@${newMessage.author.id}> kişisi reklam yaptı.\n` +
@@ -70,7 +70,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
                 .catch((err) => { })
             let fetchWebhook = webhook("Büyük Harf Engellendiğinde")
             if (fetchWebhook) {
-                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **Büyük Harf Engelleme - Bilgilendirme Sistemi** \n` +
                     `> <#${newMessage.channel.id}> metin kanalında <@${newMessage.author.id}> kişisi çok fazla büyük harf kullandı.\n` +
@@ -86,7 +86,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 
     let fetchWebhook = webhook("Bir Mesaj Düzenlendiğinde")
     if (fetchWebhook) {
-        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
         .setDescription(
             `> **Bir Mesaj Düzenlenmesi - Bilgilendirme Sistemi** \n` +
             `> <#${newMessage.channel.id}> metin kanalında <@${newMessage.author.id}> kişisi varsayılan mesajını düzenledi.\n` +

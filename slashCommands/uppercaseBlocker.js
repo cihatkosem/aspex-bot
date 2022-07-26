@@ -1,7 +1,8 @@
+const { ApplicationCommandType, ApplicationCommandOptionType, ChannelType } = require('discord.js')
 const { localTime, Models, randomId } = require("../server")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "administrator",
     name: "büyük-harfli-yazı-engel",
     description: "Belirttiğiniz kanala yazılan büyük harfli yazılar engellenir veya engeli kaldırır.",
@@ -9,7 +10,7 @@ module.exports = {
         {
             name: "channel",
             description: "Engellemek veya engelini kaldırmak istediğinizi kanalı seçiniz.",
-            type: "CHANNEL",
+            type: ApplicationCommandOptionType.Channel,
             required: false,
         },
     ],
@@ -27,7 +28,7 @@ module.exports = {
             return await interaction.reply({ content: _channels[0] ? text1 : text2 })
         }
 
-        if (channel?.type !== "GUILD_TEXT")
+        if (channel?.type !== ChannelType.GuildText)
             return await interaction.reply({ content: `Sunucuda büyük harf içeren yazılar yanlızca **metin kanalları**nda engellenebilir.` })
 
         if (!modelfetch) {

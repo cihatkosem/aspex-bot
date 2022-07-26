@@ -1,9 +1,13 @@
 const { client, config, localTime, Models, swearBlocker, adBlocker, uppercaseBlocker, translate } = require("../server")
-const { Permissions, MessageEmbed, WebhookClient } = require("discord.js")
+const { PermissionsBitField, EmbedBuilder, WebhookClient } = require("discord.js")
 
 client.on('messageCreate', async (message) => {
+    let prefix = process.env.PREFIX ? process.env.PREFIX : config.prefix
     let content = message.content.toLowerCase()
     let args = content.split(" ").map(m => m)
+    
+    let Flags = PermissionsBitField.Flags
+
     let modelfetch = await Models.guilds.findOne({ guildId: message?.guild?.id })
     let messageData = async (text) => modelfetch?.messages?.reverse().filter(f => f.receivedMessage == text)[0]
     let findCommand = await messageData(content.toLowerCase())
@@ -14,14 +18,14 @@ client.on('messageCreate', async (message) => {
 
     if (modelfetch && modelfetch?.settings?.swearBlocker?.channels.filter(f => f == message.channel.id)[0]) {
         let checkSwear = await swearBlocker(content)
-        if (checkSwear && !message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        if (checkSwear && !message.member.permissions.has(Flags.Administrator)) {
             message.delete().catch((err) => { })
             message.channel.send({ content: `${message.author}, Bu sunucuda **kötü söz** içeren mesaj yazmak yasaktır!` })
                 .then((m) => setTimeout(() => m.delete(), 10000))
                 .catch((err) => { })
             let fetchWebhook = webhook("Kötü Söz Engellendiğinde")
             if (fetchWebhook) {
-                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **Kötü Söz Engelleme - Bilgilendirme Sistemi** \n` +
                     `> <#${message.channel.id}> metin kanalında <@${message.author.id}> kişisi kötü söz kullandı.\n` +
@@ -37,14 +41,14 @@ client.on('messageCreate', async (message) => {
 
     if (modelfetch && modelfetch?.settings?.adBlocker?.channels.filter(f => f == message.channel.id)[0]) {
         let checkAd = await adBlocker(content)
-        if (checkAd && !message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        if (checkAd && !message.member.permissions.has(Flags.Administrator)) {
             message.delete().catch((err) => { })
             message.channel.send({ content: `${message.author}, Bu sunucuda **reklam** içeren mesaj yazmak yasaktır!` })
                 .then((m) => setTimeout(() => m.delete(), 10000))
                 .catch((err) => { })
             let fetchWebhook = webhook("Reklam Engellendiğinde")
             if (fetchWebhook) {
-                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **Reklam Engelleme - Bilgilendirme Sistemi** \n` +
                     `> <#${message.channel.id}> metin kanalında <@${message.author.id}> kişisi reklam yaptı.\n` +
@@ -60,14 +64,14 @@ client.on('messageCreate', async (message) => {
 
     if (modelfetch && modelfetch?.settings?.uppercaseBlocker?.channels.filter(f => f == message.channel.id)[0]) {
         let checkUppercase = await uppercaseBlocker(message.content)
-        if (checkUppercase > 50 && !message.author.bot && !message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        if (checkUppercase > 50 && !message.author.bot && !message.member.permissions.has(Flags.Administrator)) {
             message.delete().catch((err) => { })
             message.channel.send({ content: `${message.author}, Bu sunucuda **fazla büyük harf** içeren mesajlar yasaktır!` })
                 .then((m) => setTimeout(() => m.delete(), 10000))
                 .catch((err) => { })
             let fetchWebhook = webhook("Büyük Harf Engellendiğinde")
             if (fetchWebhook) {
-                let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+                let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setDescription(
                     `> **Büyük Harf Engelleme - Bilgilendirme Sistemi** \n` +
                     `> <#${message.channel.id}> metin kanalında <@${message.author.id}> kişisi çok fazla büyük harf kullandı.\n` +
@@ -97,7 +101,7 @@ client.on('messageCreate', async (message) => {
 
     if (content == "<@972964572313030676>") return message.reply(`${message.author}, komutlarımı görmek için \` /yardım \` yazabilirsin.`);
 
-    if (content.slice(0, 1) !== config.prefix) return;
+    if (content.slice(0, 1) !== prefix) return;
 
     if (findPrefixCommand) {
         if (findPrefixCommand.block == true) message.delete().catch((err) => { })
@@ -111,7 +115,7 @@ client.on('messageCreate', async (message) => {
         return message.reply({ content: "😕 Yazdığınız komut sistemde bulunmamaktadır.", ephemeral: true })
     if (command.permission == "developer" && !config.developers.includes(message.author.id))
         return message.reply({ content: "😕 Yazdığınız komutu yanlızca geliştirici ekibimiz kullanabilir.", ephemeral: true })
-    if (command.permission && !message.member.permissions.has(Permissions.FLAGS[command.permission]))
+    if (command.permission && !message.member.permissions.has(Flags[command.permission]))
         return message.reply({ content: "😕 Yazdığınız komutu kullanabilmek için bu sunucuda daha üst yetkilere sahip olmanız gerekmektedir.", ephemeral: true })
     command.run(client, message).catch(async (error) => {
         console.log(error)

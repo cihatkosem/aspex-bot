@@ -1,5 +1,5 @@
 const { client, config, Models } = require("../server")
-const { WebhookClient, MessageEmbed } = require("discord.js")
+const { WebhookClient, EmbedBuilder } = require("discord.js")
 
 client.on('messageDelete', async (message) => {
     let modelfetch = await Models.guilds.findOne({ guildId: message?.guildId })
@@ -8,7 +8,7 @@ client.on('messageDelete', async (message) => {
     let webhook = (_name) => Log(_name) ? webhookURL + Log(_name)?.channelWebhookID + "/" + Log(_name)?.channelWebhookTOKEN : null
     let fetchWebhook = webhook("Bir Mesaj Silindiğinde")
     if (fetchWebhook && message.author.bot == false) {
-        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
         .setDescription(
             `> **Bir Mesaj Silinmesi - Bilgilendirme Sistemi** \n` +
             `> <#${message.channelId}> metin kanalında <@${message.author.id}> kişisi mesajını sildi.\n` +

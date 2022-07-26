@@ -1,10 +1,10 @@
 const { config } = require("../server")
-const { MessageEmbed } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
     name: "help",
     run: async (client, interaction) => {
-        let commandsEmbed = async (filter) => new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let commandsEmbed = async (filter) => new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
             .setImage(config.embedAnimateBar)
             .setDescription(`${client.slashCommands.filter(f => f.authorityLevel == filter).map(m => `\`/${m.name}\` - ${m.description}`).join(' \n')}`)
             .setTitle(

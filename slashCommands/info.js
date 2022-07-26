@@ -1,13 +1,13 @@
+const { ApplicationCommandType, ApplicationCommandOptionType, EmbedBuilder } = require("discord.js")
 const { localTime, config } = require("../server")
-const { MessageEmbed } = require("discord.js")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "members",
     name: "bilgi",
     description: "Discord botuna ait bilgileri gösterir.",
     run: async (client, interaction, args) => {
-        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
             .setThumbnail(client.user.displayAvatarURL())
             .addFields(
                 {

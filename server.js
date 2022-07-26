@@ -1,17 +1,37 @@
-const { Intents, Client, WebhookClient, MessageEmbed, Collection, Permissions } = require("discord.js")
-const allowedMentions = { parse: ['users', 'roles'], repliedUser: true }
-const intents = [
-    Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-    Intents.FLAGS.GUILD_INTEGRATIONS, Intents.FLAGS.GUILD_WEBHOOKS, Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_VOICE_STATES,
-    Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_MESSAGE_TYPING, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-    Intents.FLAGS.DIRECT_MESSAGE_TYPING, Intents.FLAGS.GUILD_SCHEDULED_EVENTS
-]
+const { Client, Collection, GatewayIntentBits, Partials, ChannelType } = require("discord.js")
+const client = new Client({
+    intents: [
+        GatewayIntentBits.DirectMessageReactions,
+        GatewayIntentBits.DirectMessageTyping,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.GuildBans,
+        GatewayIntentBits.GuildEmojisAndStickers,
+        GatewayIntentBits.GuildIntegrations,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildMessageTyping,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildScheduledEvents,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildWebhooks,
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.MessageContent
+    ], partials: [
+        Partials.User,
+        Partials.Channel,
+        Partials.GuildMember,
+        Partials.Message,
+        Partials.Reaction,
+        Partials.GuildScheduledEvent,
+        Partials.ThreadMember
+    ]
+});
 
-const client = new Client({ intents, allowedMentions })
 
 const config = { prefix, token, owner, developers, mongoURL, swears, instagramAccout, inviteLink, } = require("./config.js")
-const { localTime, swearBlocker, randomId, adBlocker, uppercaseBlocker, instagramUser, translate } = require("./functions.js")
+const { localTime, swearBlocker, randomId, adBlocker, uppercaseBlocker, translate } = require("./functions.js")
 const fs = require("fs")
 const mongoose = require('mongoose')
 const mongoDBConnect = require('./mongoDB/connect.js')
@@ -26,8 +46,9 @@ const DCStrategy = require('passport-discord').Strategy
 const bodyParser = require('body-parser')
 const session = require("express-session")
 const rateLimit = require('express-rate-limit')
-const pageLimit = rateLimit({ windowMs: 1000, max: 2, message: { err: "You exceeded the limit!" } })
+const pageLimit = rateLimit({ windowMs: 1000, max: 5, message: { err: "You exceeded the limit!" } })
 const sessionArray = { secret: "~axpex", resave: false, saveUninitialized: false, cookie: { expires: 7 * 8640000 } }
+const version = require("./package.json").version
 
 require('dotenv').config()
 require('dayjs/locale/tr')
@@ -38,14 +59,10 @@ require("dayjs").locale('tr')
 client.slashCommands = new Collection()
 client.prefixCommands = new Collection()
 client.selectMenus = new Collection()
+client.ModalSubmit = new Collection()
+client.clickButtons = new Collection()
 
 fs.readdir("./events/", (err, files) => err ? console.log(err) : files.forEach(file => require(`./events/${file}`)))
-
-var regToken = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g;
-
-//client.on('debug', e => console.log(e.replace(regToken, 'that was redacted')))
-client.on("warn", e => console.log(e.replace(regToken, "that was redacted")))
-client.on("error", e => console.log(e.replace(regToken, "that was redacted")))
 
 mongoDBConnect(mongoose, process.env.MONGOURL || mongoURL)
 
@@ -68,36 +85,43 @@ async function openSystem() {
     }, 500)
 }
 
+module.exports = {
+    client, config: require("./config.js"), Models, localTime,
+    swearBlocker, randomId, adBlocker, translate, uppercaseBlocker,
+    log: (i) => console.log(i)
+}
+
 app.use(pageLimit)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(express.static(path.join(__dirname, './views')))
 app.use(session(sessionArray))
 app.use(passport.initialize())
 app.use(passport.session())
+
 app.set('view engine', 'ejs')
 app.set('trust proxy', true)
-app.use(express.static(path.join(__dirname, './views')))
 app.set('views', require('path').join(__dirname, './views/'))
 
 app.get("/", async (req, res) => {
     let guilds = []
-    client.guilds.cache.sort(function(a, b){ return b.members.cache.size - a.members.cache.size }).map(m =>
-        guilds.push({ 
+    client.guilds.cache.sort(function (a, b) { return b.members.cache.size - a.members.cache.size }).map(m =>
+        guilds.push({
             id: m.id, name: m.name, members: m.members.cache.size,
             icon: `https://cdn.discordapp.com/icons/${m.id}/${m.icon}.${m.icon.startsWith("a_") ? "gif" : "png"}`
         })
     )
-    res.render("index", { client, user: req.session.user, guilds })
+    res.render("index", { client, user: req.session.user, guilds, version })
 })
 
 app.get("/hakkinda", async (req, res) => {
     return res.render("about", {
-        client, user: req.session.user
+        client, user: req.session.user, version
     })
 })
 
 app.get("/davet-et", async (req, res) => {
-    let URL = inviteLink.replace("clientId", `${client.user.id}`).replace("website", process.env.TOKEN ? "localhost" : "aspex.gq")
+    let URL = config.inviteLink.replace("clientId", `${client.user.id}`).replace("website", process.env.TOKEN ? "localhost" : "aspex.gq")
     return res.redirect(URL)
 })
 
@@ -131,7 +155,7 @@ app.get("/profil", async (req, res) => {
     let jointGuilds = req.session.user.guilds.filter(f => clientGuilds.includes(f.id))
     let guilds = jointGuilds.filter(f => (parseInt(f.permissions) & 0x8 === 0x8))
     return res.render("profile", {
-        client, user: req.session.user, guilds, config: { owner, developers }
+        client, user: req.session.user, guilds, config: { owner: config.owner, developers: config.developers }, version
     })
 })
 
@@ -142,7 +166,7 @@ app.get(["/sunucular", "/sunucular/", "/sunucular/:id"], async (req, res) => {
 
     guild.owner = guild.members.cache.get(guild.ownerId)
     return res.render("server", {
-        client, user: req.session.user, guild
+        client, user: req.session.user, guild, version
     })
 })
 
@@ -157,6 +181,7 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
     let setting = req.params.setting
     if (!guildModel && paramsGuild) await Models.functions.guild.create(paramsGuild.id)
 
+    if (guild) guild.settings = config.settings
     if (req.query.swearblockerchannel) {
         if (!guildModel) return res.redirect(req.originalUrl)
         let channels = guildModel?.settings?.swearBlocker?.channels
@@ -217,27 +242,27 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
             let webhook = fetchWebhook(req.query.joineduserchannel)
             if (!webhook) {
                 return clientChannel.createWebhook(`${client.user.username} Bilgilendirme`, { avatar: client.user.displayAvatarURL() })
-                .then(async () => {
-                    await Models.guilds.updateOne(
-                        { guildId: paramsGuild.id },
-                        { 'settings.loginInfo': { status: "enable", channelId: req.query.joineduserchannel } }
-                    )
-                    setTimeout(async () => {
-                        let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
-                        let _loginInfo = _modelfetch?.settings?.loginInfo
-                        if (!_loginInfo.channelWebhookID || !_loginInfo.channelWebhookTOKEN) {
-                            _loginInfo.channelWebhookID = webhookfind.id
-                            _loginInfo.channelWebhookTOKEN = webhookfind.token
-                            _modelfetch.save()
-                        }
-                        return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/joined-user-information`), 500)
-                    }, 1500);
-                }).catch((err) => {
-                    res.redirect(req.originalUrl)
-                })
+                    .then(async () => {
+                        await Models.guilds.updateOne(
+                            { guildId: paramsGuild.id },
+                            { 'settings.loginInfo': { status: "enable", channelId: req.query.joineduserchannel } }
+                        )
+                        setTimeout(async () => {
+                            let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
+                            let _loginInfo = _modelfetch?.settings?.loginInfo
+                            if (!_loginInfo.channelWebhookID || !_loginInfo.channelWebhookTOKEN) {
+                                _loginInfo.channelWebhookID = webhookfind.id
+                                _loginInfo.channelWebhookTOKEN = webhookfind.token
+                                _modelfetch.save()
+                            }
+                            return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/joined-user-information`), 500)
+                        }, 1500);
+                    }).catch((err) => {
+                        res.redirect(req.originalUrl)
+                    })
             } else {
                 await Models.guilds.updateOne(
-                    { guildId: paramsGuild.id }, 
+                    { guildId: paramsGuild.id },
                     { 'settings.loginInfo': { status: "enable", channelId: req.query.joineduserchannel } }
                 )
                 return setTimeout(async () => {
@@ -269,27 +294,27 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
             let webhook = fetchWebhook(req.query.leaveduserchannel)
             if (!webhook) {
                 return clientChannel.createWebhook(`${client.user.username} Bilgilendirme`, { avatar: client.user.displayAvatarURL() })
-                .then(async () => {
-                    await Models.guilds.updateOne(
-                        { guildId: paramsGuild.id },
-                        { 'settings.logoutInfo': { status: "enable", channelId: req.query.leaveduserchannel } }
-                    )
-                    setTimeout(async () => {
-                        let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
-                        let _logoutInfo = _modelfetch?.settings?.logoutInfo
-                        if (!_logoutInfo.channelWebhookID || !_logoutInfo.channelWebhookTOKEN) {
-                            _logoutInfo.channelWebhookID = webhookfind.id
-                            _logoutInfo.channelWebhookTOKEN = webhookfind.token
-                            _modelfetch.save()
-                        }
-                        return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/leaved-user-information`), 500)
-                    }, 1500);
-                }).catch((err) => {
-                    res.redirect(req.originalUrl)
-                })
+                    .then(async () => {
+                        await Models.guilds.updateOne(
+                            { guildId: paramsGuild.id },
+                            { 'settings.logoutInfo': { status: "enable", channelId: req.query.leaveduserchannel } }
+                        )
+                        setTimeout(async () => {
+                            let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
+                            let _logoutInfo = _modelfetch?.settings?.logoutInfo
+                            if (!_logoutInfo.channelWebhookID || !_logoutInfo.channelWebhookTOKEN) {
+                                _logoutInfo.channelWebhookID = webhookfind.id
+                                _logoutInfo.channelWebhookTOKEN = webhookfind.token
+                                _modelfetch.save()
+                            }
+                            return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/leaved-user-information`), 500)
+                        }, 1500);
+                    }).catch((err) => {
+                        res.redirect(req.originalUrl)
+                    })
             } else {
                 await Models.guilds.updateOne(
-                    { guildId: paramsGuild.id }, 
+                    { guildId: paramsGuild.id },
                     { 'settings.logoutInfo': { status: "enable", channelId: req.query.leaveduserchannel } }
                 )
                 return setTimeout(async () => {
@@ -321,27 +346,27 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
             let webhook = fetchWebhook(req.query.spotifyinfochannel)
             if (!webhook) {
                 return clientChannel.createWebhook(`${client.user.username} Bilgilendirme`, { avatar: client.user.displayAvatarURL() })
-                .then(async () => {
-                    await Models.guilds.updateOne(
-                        { guildId: paramsGuild.id },
-                        { 'settings.spotifyPresence': { status: "enable", channelId: req.query.spotifyinfochannel } }
-                    )
-                    setTimeout(async () => {
-                        let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
-                        let _spotifyPresence = _modelfetch?.settings?.spotifyPresence
-                        if (!_spotifyPresence.channelWebhookID || !_spotifyPresence.channelWebhookTOKEN) {
-                            _spotifyPresence.channelWebhookID = webhookfind.id
-                            _spotifyPresence.channelWebhookTOKEN = webhookfind.token
-                            _modelfetch.save()
-                        }
-                        return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/spotify-playing-information`), 500)
-                    }, 1500);
-                }).catch((err) => {
-                    res.redirect(req.originalUrl)
-                })
+                    .then(async () => {
+                        await Models.guilds.updateOne(
+                            { guildId: paramsGuild.id },
+                            { 'settings.spotifyPresence': { status: "enable", channelId: req.query.spotifyinfochannel } }
+                        )
+                        setTimeout(async () => {
+                            let _modelfetch = await Models.guilds.findOne({ guildId: paramsGuild.id })
+                            let _spotifyPresence = _modelfetch?.settings?.spotifyPresence
+                            if (!_spotifyPresence.channelWebhookID || !_spotifyPresence.channelWebhookTOKEN) {
+                                _spotifyPresence.channelWebhookID = webhookfind.id
+                                _spotifyPresence.channelWebhookTOKEN = webhookfind.token
+                                _modelfetch.save()
+                            }
+                            return setTimeout(() => res.redirect(`/panel/${paramsGuild.id}/spotify-playing-information`), 500)
+                        }, 1500);
+                    }).catch((err) => {
+                        res.redirect(req.originalUrl)
+                    })
             } else {
                 await Models.guilds.updateOne(
-                    { guildId: paramsGuild.id }, 
+                    { guildId: paramsGuild.id },
                     { 'settings.spotifyPresence': { status: "enable", channelId: req.query.spotifyinfochannel } }
                 )
                 return setTimeout(async () => {
@@ -359,16 +384,9 @@ app.get(["/panel", "/panel/:server", "/panel/:server/:setting"], async (req, res
     }
 
     return res.render("panel", {
-        client, user: req.session.user, guilds, settings: config.settings,
-        guild, guildModel, setting
+        client, user: req.session.user, guilds, guild, guildModel, setting, version, ChannelType
     })
 })
-
-module.exports = {
-    client, config: require("./config.js"), Models, localTime,
-    swearBlocker, randomId, adBlocker, instagramUser, translate, uppercaseBlocker
-}
-
 
 async function fetchWebhook(channelId) {
     if (!client) return new Promise((resolve) => resolve(null))

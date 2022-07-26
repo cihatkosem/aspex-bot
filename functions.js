@@ -1,9 +1,7 @@
-const server = require("express")()
-const { swears, instagramAccout } = require("./config.js")
+const { swears } = require("./config.js")
 const DayJs = require("dayjs")
 const randomstring = require("randomstring")
 const GoogleTranslate = require('translate-google')
-const instagram = require("user-instagram")
 
 require('dayjs/locale/tr')
 require("dayjs").extend(require('dayjs/plugin/timezone'))
@@ -40,29 +38,6 @@ module.exports.adBlocker = async function (content) {
 module.exports.randomId = async function (length) {
     let id = randomstring.generate({ length, charset: 'numeric' })
     return new Promise((resolve) => resolve(id))
-}
-
-module.exports.instagramUser = async function (username) {
-    await instagram.authenticate(instagramAccout.username, instagramAccout.pass);
-    try {
-        instagram.getUserData(username).then(userData => {
-            if (!userData.getUsername()) return new Promise((resolve) => resolve(null))
-            let user = {
-                id: userData?.getId() ? userData?.getId() : null,
-                username: userData?.getUsername() ? userData?.getUsername() : null,
-                verified: userData?.isVerified() ? userData?.isVerified() : null,
-                private: userData?.isPrivate() ? userData?.isPrivate() : null,
-                biography: userData?.getBiography() ? userData?.getBiography() : null,
-                followers: userData?.getFollowersCount() ? userData?.getFollowersCount() : null,
-                following: userData?.getFollowingCount() ? userData?.getFollowingCount() : null,
-                picture: userData?.getHdProfilePicture() ? userData?.getHdProfilePicture() : null,
-                following: userData?.getFollowingCount() ? userData?.getFollowingCount() : null
-            }
-            return new Promise((resolve) => resolve(user))
-        })
-    } catch (err) {
-        return new Promise((resolve) => resolve(null))
-    }
 }
 
 module.exports.translate = async function (toLang, text) {

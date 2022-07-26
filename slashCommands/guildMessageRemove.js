@@ -1,7 +1,8 @@
+const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord.js')
 const { Models } = require("../server")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "administrator",
     name: "mesaj-sil",
     description: "Sunucunuzda yazılan mesaja özel cevabı silebilirsiniz.",
@@ -9,7 +10,7 @@ module.exports = {
         {
             name: "silinecek_yazı",
             description: "Cevap verilmesini istemediğiniz yazıyı yazınız.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: true
         }
     ],

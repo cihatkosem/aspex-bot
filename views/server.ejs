@@ -12,7 +12,8 @@
         <link href="https://cdn.jsdelivr.net/npm/daisyui@2.17.0/dist/full.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&amp;display=swap">
     </head>
-    <body class="select-none bg-black min-h-screen text-white p-2">
+    <body class="select-none bg-black min-h-screen text-white p-2" 
+        onload="loader('popup','../../../pages/popup.ejs'); loader('footer','../../../pages/footer.ejs');">
         <nav class="navbar">
             <div  onclick="location.href='/'" class="flex-1 cursor-pointer">
                 <div class="btn btn-ghost flex flex-wrap items-center">
@@ -89,18 +90,15 @@
                 </div>
             </div>
         </div>
-        <div class="flex items-end justify-end fixed bottom-0 right-0 mb-3 mr-3 z-10">
-            <div class="bg-primary border-2 border-black text-sm rounded-3xl p-0.5 px-5 transform hover:scale-110">
-                beta version v0.2.1
-            </div>
-        </div>
-        <footer class="footer footer-center mt-5 p-5 bg-primary text-primary-content rounded-3xl">
-            <div>
-                <p class="font-bold">
-                    Teknik destek/sorun/öneri vs. için help@drizzlydeveloper.xyz
-                </p>
-                <p>Copyright © 2022 - Tüm hakları Drizzly Developer kuruluşu ile saklıdır.</p>
-            </div> 
-        </footer>
+        <div id="footer"></div>
+        <div id="popup"></div>
+        <script>
+            function loader(ElementId, File) {
+                let element = document.getElementById(ElementId)
+                fetch(File).then(res => res.text())
+                    .then(x => element.innerHTML = x.replace("[% packageVersion ]",`<%= version %>`))
+            }
+        </script>
+        <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
     </body>
 </html>

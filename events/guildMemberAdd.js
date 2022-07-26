@@ -1,6 +1,6 @@
+const { WebhookClient, EmbedBuilder, ChannelType } = require("discord.js")
 const { client, config, Models } = require("../server")
 const axios = require("axios")
-const { WebhookClient, MessageEmbed } = require("discord.js")
 
 client.on('guildMemberAdd', async (member) => {
     let modelfetch = await Models.guilds.findOne({ guildId: member?.guild?.id })
@@ -17,7 +17,7 @@ client.on('guildMemberAdd', async (member) => {
     let webhookfind = webhooksFetch?.filter(f => f.name == "Aspex Bilgilendirme").map(m => m)[0]
 
     let systemChannelId = client.guilds.cache.get(modelfetch.guildId).systemChannelId
-    let firstChannelId = client.guilds.cache.get(modelfetch.guildId).channels.cache.filter(f => f.type == "GUILD_TEXT")?.map(m => m)[0]?.id
+    let firstChannelId = client.guilds.cache.get(modelfetch.guildId).channels.cache.filter(f => f.type == ChannelType.GuildText)?.map(m => m)[0]?.id
     let MessageChannel = client.guilds.cache.get(modelfetch.guildId).channels.cache.get(systemChannelId ? systemChannelId : firstChannelId)
 
     if (!webhookfind)
@@ -42,7 +42,7 @@ client.on('guildMemberAdd', async (member) => {
 
     let Info = new WebhookClient({ url: loginInfoWebhookURL })
 
-    let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+    let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
         .setDescription(
             `> Merhaba ben <@${user.id}>, şuanda sunucuya giriş yaptım. \n` +
             `${user.bot == "yes" || user.bot == "verified" ? "> Ben bir botum.\n" : ""}` +

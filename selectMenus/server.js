@@ -1,5 +1,5 @@
 const { Models, config } = require("../server")
-const { MessageEmbed } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
     name: "server",
@@ -17,7 +17,7 @@ module.exports = {
             let loginInfo = settings?.loginInfo
             let logoutInfo = settings?.logoutInfo
 
-            let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+            let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setTitle(`Sunucudaki ayarlar:`)
                 .addFields(
                     {
@@ -47,7 +47,7 @@ module.exports = {
             let transactions = modelfetch.transactions
             if (!transactions) return await interaction.editReply({ content: '> Sunucuda hiçbir işlem verisine ulaşılamadı.', ephemeral: true })
             
-            let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+            let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
                 .setTitle(`Sunucudaki işlemler:`)
                 .setDescription("Bu özellik çok yakında web site üzerinden hizmet verecektir.")
             return await interaction.editReply({ embeds: [embed], components: [], ephemeral: true })

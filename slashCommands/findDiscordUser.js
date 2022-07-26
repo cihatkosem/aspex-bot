@@ -1,9 +1,9 @@
+const { ApplicationCommandType, ApplicationCommandOptionType,EmbedBuilder } = require("discord.js")
 const { config } = require("../server")
 const axios = require("axios")
-const { MessageEmbed } = require("discord.js")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "members",
     name: "discord",
     description: "Belirttiğiniz kullanıcı id'si ile kullanıcının genel bilgilerini öğrenebilirsiniz.",
@@ -11,7 +11,7 @@ module.exports = {
         {
             name: "id",
             description: "Kullanıcı id'si ile kullanıcı araması yapılır.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: false,
         },
     ],
@@ -22,7 +22,7 @@ module.exports = {
         let user = api?.data?.data ? api?.data?.data : null
         if (!user) return interaction.reply({ content: "Profil bulunamadı! _Api kullanıldığı için kullanım limiti dolmuş olabilir_", ephemeral: true })
 
-        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
             .setAuthor({ name: user.username, iconURL: user.avatarURL ? user.avatarURL + "?size=4096" : "" })
             .setDescription(
                 '**Oluşturulma Tarihi: **' + user.createdAt + "\n" +

@@ -1,13 +1,15 @@
 const { client, config, swearBlocker, localTime, translate } = require("../server")
-const { Permissions, MessageEmbed } = require("discord.js")
+const { PermissionsBitField, EmbedBuilder, InteractionType, ChannelType, ApplicationCommandOptionType } = require("discord.js")
 
 client.on("interactionCreate", async (interaction) => {
-    if (interaction.isCommand()) {
+    if (interaction.type === InteractionType.ApplicationCommand) {
+        if (interaction.channel.type === ChannelType.DM)
+            return interaction.reply({ content: "😐 Komutu burada kullanamazsınız.", ephemeral: true })
         const cmd = client.slashCommands.get(interaction.commandName)
         if (!cmd) return interaction.reply({ content: "😕 Komuta erişim sağlanamadı.", ephemeral: true })
         const args = []
         for (let option of interaction.options.data) {
-            if (option.type === "SUB_COMMAND") {
+            if (option.type === ApplicationCommandOptionType.Subcommand) {
                 if (option.name) args.push(option.name)
                 option.options?.forEach((x) => {
                     if (x.value) args.push(x.value)
@@ -16,11 +18,13 @@ client.on("interactionCreate", async (interaction) => {
         }
 
         interaction.member = interaction.guild.members.cache.get(interaction.user.id)
-        let flags = Permissions.FLAGS
+        
         let memberPerms = interaction.member.permissions
         let permissionCheck = memberPerms.has(
-            cmd.authorityLevel == "can-ban" ? flags.BAN_MEMBERS : cmd.authorityLevel == "can-kick" ? flags.KICK_MEMBERS :
-                cmd.authorityLevel == "message-manager" ? flags.MANAGE_MESSAGES : cmd.authorityLevel == "administrator" ? flags.ADMINISTRATOR : flags.SEND_MESSAGES
+            cmd.authorityLevel == "can-ban" ? PermissionsBitField.Flags.BanMembers : 
+            cmd.authorityLevel == "can-kick" ? PermissionsBitField.Flags.KickMembers :
+            cmd.authorityLevel == "message-manager" ? PermissionsBitField.Flags.ManageMessages : 
+            cmd.authorityLevel == "administrator" ? PermissionsBitField.Flags.Administrator : PermissionsBitField.Flags.SendMessages
         )
 
         if (!permissionCheck || cmd.authorityLevel == "developers" && !config.developers.includes(interaction.member.user.id))
@@ -40,7 +44,14 @@ client.on("interactionCreate", async (interaction) => {
         })
     }
 
-    if (interaction.isButton()) { }
+    if (interaction.isButton()) { 
+        const cmd = client.clickButtons.get(interaction.customId)
+        if (!cmd) return interaction.reply({ content: "😕 Seçim yaptığınız menü sistemde bulunmamaktadır.", components: [], ephemeral: true })
+        interaction.member = interaction.guild.members.cache.get(interaction.user.id)
+        try { cmd.run(client, interaction) }
+        catch (error) { console.log(error) }
+    }
+
     if (interaction.isSelectMenu()) {
         const cmd = client.selectMenus.get(interaction.customId)
         if (!cmd) return interaction.reply({ content: "😕 Seçim yaptığınız menü sistemde bulunmamaktadır.", components: [], ephemeral: true })
@@ -50,24 +61,12 @@ client.on("interactionCreate", async (interaction) => {
         catch (error) { console.log(error) }
     }
 
-    if (interaction.isModalSubmit()) {
-        const feedback_description = interaction.fields.getTextInputValue('feedback_description')
-        if (feedback_description) {
-            let check = swearBlocker(feedback_description)
-            if (check == true) return;
-
-            await interaction.reply({ content: 'Teşekkürler, geri bildiriminiz başarıyla gönderildi!', ephemeral: true });
-            let channel = client.guilds.cache.get("939976041932398692").channels.cache.get("986941238232104990")
-            let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
-                .setAuthor({ name: interaction.member.user.username, iconURL: interaction.member.user.displayAvatarURL() })
-                .setDescription(
-                    `> Gönderen: ${interaction.member} \n` + 
-                    `> Hakkında detaylı bilgi [tıkla →](http://drizzlydeveloper.xyz/api/discord/users/${interaction.member.id}) \n` +
-                    `\`\`\`${feedback_description}\`\`\``
-                )
-                .setTimestamp()
-
-            channel.send({ embeds: [embed] })
-        }
+    if (interaction.type === InteractionType.ModalSubmit) {
+        const cmd = client.ModalSubmit.get(interaction.customId)
+        if (!cmd) return;
+        interaction.member = interaction.guild.members.cache.get(interaction.user.id)
+        await interaction.deferUpdate()
+        try { cmd.run(client, interaction) }
+        catch (error) { console.log(error) }
     }
 })

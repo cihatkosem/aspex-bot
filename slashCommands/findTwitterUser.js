@@ -1,9 +1,9 @@
-const axios = require("axios")
+const { ApplicationCommandType, ApplicationCommandOptionType, EmbedBuilder } = require("discord.js")
 const { config } = require("../server")
-const { MessageEmbed } = require("discord.js")
+const axios = require("axios")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "members",
     name: "twitter",
     description: "Belirttiğiniz kullanıcı adı ile kullanıcının Twitter'daki bilgilerini öğrenebilirsiniz.",
@@ -11,7 +11,7 @@ module.exports = {
         {
             name: "username",
             description: "Kullanıcı adı ile kullanıcı araması yapılır.",
-            type: "STRING",
+            type: ApplicationCommandOptionType.String,
             required: false,
         },
     ],
@@ -27,7 +27,7 @@ module.exports = {
         let descORJ = user.description.original
         let description = desc && descORJ ? `${descORJ}${descORJ !== descTR ? `\n_${descTR}_` : ""}\n\n` : null
 
-        let embed = new MessageEmbed().setColor(config.color).setFooter({ text: config.embedFooter })
+        let embed = new EmbedBuilder().setColor(config.color).setFooter({ text: config.embedFooter })
             .setAuthor({ name: user.name, iconURL: user.avatar ? user.avatar : "" })
             .setDescription(
                 `${desc ? description ? description : "" : ""}` +

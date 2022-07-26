@@ -1,7 +1,8 @@
+const { ApplicationCommandType, ApplicationCommandOptionType, ChannelType } = require('discord.js')
 const { localTime, Models, randomId } = require("../server")
 
 module.exports = {
-    type: 'CHAT_INPUT',
+    type: ApplicationCommandType.ChatInput,
     authorityLevel: "administrator",
     name: "spotify-bilgi",
     description: "Kullanıcıların anlık Spotify'da dinledikleri müzikler hakkında bilgilendir.",
@@ -9,7 +10,7 @@ module.exports = {
         {
             name: "channel",
             description: "Bilgi mesajını göndermemiz için bir metin kanalı seçmelisiniz.",
-            type: "CHANNEL",
+            type: ApplicationCommandOptionType.Channel,
             required: true,
         },
     ],
@@ -23,7 +24,7 @@ module.exports = {
         let IsItWorking = spotifyPresence?.status
         let WorkingChannelId = IsItWorking == "enable" ? spotifyPresence?.channelId : null
 
-        if (channel?.type !== "GUILD_TEXT")
+        if (channel?.type !== ChannelType.GuildText)
             return await interaction.reply({ content: `Bilgi mesajı yanlızca **metin kanalları**nda gönderilebilir. Lütfen bir **metin kanalı** seçiniz.` })
 
         if (!modelfetch) {
