@@ -25,6 +25,14 @@ module.exports.guilds = guilds = mongoose.model("guilds", mongoose.Schema({
             channelWebhookID: String,
             channelWebhookTOKEN: String
         },
+        registerSystem: {
+            status: String,
+            adminRoleId: String,
+            firstChannelId: String,
+            infoChannelId: String,
+            newManRoleId: String,
+            newWomanRoleId: String
+        }
     },
     messages: { type: Array, required: true, default: [] },
     logs: { type: Array, required: true, default: [] },
@@ -40,9 +48,31 @@ module.exports.functions = {
                     swearBlocker: { channels: [] },
                     adBlocker: { channels: [] },
                     uppercaseBlocker: { channels: [] },
-                    loginInfo: { status: "disable", channelId: "", channelWebhookID: "", channelWebhookTOKEN: "" },
-                    logoutInfo: { status: "disable", channelId: "", channelWebhookID: "", channelWebhookTOKEN: "" },
-                    spotifyPresence: { status: "disable", channelId: "", channelWebhookID: "", channelWebhookTOKEN: "" },
+                    loginInfo: {
+                        status: "disable",
+                        channelId: "",
+                        channelWebhookID: "",
+                        channelWebhookTOKEN: ""
+                    },
+                    logoutInfo: {
+                        status: "disable",
+                        channelId: "",
+                        channelWebhookID: "",
+                        channelWebhookTOKEN: ""
+                    },
+                    spotifyPresence: {
+                        status: "disable",
+                        channelId: "",
+                        channelWebhookID: "",
+                        channelWebhookTOKEN: ""
+                    },
+                    registerSystem: {
+                        status: "disable",
+                        firstChannelId: "",
+                        infoChannelId: "",
+                        newManRoleId: "",
+                        newWomanRoleId: ""
+                    }
                 },
                 transactions: [],
                 logs: [],
